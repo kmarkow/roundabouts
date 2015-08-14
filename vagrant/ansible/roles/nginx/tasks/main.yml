@@ -1,0 +1,16 @@
+---
+- name: Install nginx
+  apt: name=nginx state=present
+
+- name: Remove default nginx configuration (sites-enabled)
+  shell: rm -f /etc/nginx/sites-enabled/default
+
+- name: Remove default nginx configuration (sites-available)
+  shell: rm -f /etc/nginx/sites-available/default
+
+- name: Copy nginx configuration
+  template: src=default.conf dest=/etc/nginx/sites-available/roundabouts.local
+
+- name: Link configuration to sites-enabled
+  shell: ln -s /etc/nginx/sites-available/roundabouts.local /etc/nginx/sites-enabled/roundabouts.local
+  notify: restart nginx

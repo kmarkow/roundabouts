@@ -1,0 +1,6 @@
+---
+- name: Install htop
+  apt: name=htop state=present
+
+- name: Install joe editor
+  apt: name=joe state=present

@@ -1,0 +1,9 @@
+---
+- name: Install Nginx
+  hosts: vagrant
+  remote_user: root
+  sudo: yes
+
+  roles:
+    - dev_tools
+    - nginx

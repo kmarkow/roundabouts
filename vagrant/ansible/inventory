@@ -1,0 +1,16 @@
+#!/bin/bash
+# This file must be executable due to this
+# https://github.com/ansible/ansible/issues/10068
+# http://stackoverflow.com/questions/26859360/cant-use-ansible-inventory-file-because-it-is-executable
+cat <<EOF
+{
+ "_meta": {
+    "hostvars": {
+      "127.0.0.1": { "ansible_connection": "local" }
+    }
+  },
+  "vagrant": [
+    "127.0.0.1"
+  ]
+ }
+EOF
