@@ -10,7 +10,8 @@
 
 - name: Copy nginx configuration
   template: src=default.conf dest=/etc/nginx/sites-available/roundabouts.local
+  notify: restart nginx
 
 - name: Link configuration to sites-enabled
-  shell: ln -s /etc/nginx/sites-available/roundabouts.local /etc/nginx/sites-enabled/roundabouts.local
+  file: src=/etc/nginx/sites-available/roundabouts.local dest=/etc/nginx/sites-enabled/roundabouts.local state=link
   notify: restart nginx
