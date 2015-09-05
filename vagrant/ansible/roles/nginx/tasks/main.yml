@@ -3,10 +3,10 @@
   apt: name=nginx state=present
 
 - name: Remove default nginx configuration (sites-enabled)
-  shell: rm -f /etc/nginx/sites-enabled/default
+  file: path=/etc/nginx/sites-enabled/default state=absent
 
 - name: Remove default nginx configuration (sites-available)
-  shell: rm -f /etc/nginx/sites-available/default
+  file: path=/etc/nginx/sites-available/default state=absent
 
 - name: Copy nginx configuration
   template: src=default.conf dest=/etc/nginx/sites-available/roundabouts.local

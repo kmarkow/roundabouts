@@ -7,3 +7,4 @@
   roles:
     - dev_tools
     - nginx
+    - nodejs

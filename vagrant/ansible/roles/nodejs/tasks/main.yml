@@ -1,0 +1,13 @@
+---
+- name: Check if nodejs is installed
+  command: dpkg-query -l nodejs
+  register: nodejs_check
+  failed_when: False
+  changed_when: False
+
+- name: Prepare for installing
+  shell: curl --silent --location https://deb.nodesource.com/setup_0.12 | bash -
+  when: nodejs_check.stderr.find("no packages found") != -1
+
+- name: Install NodeJS
+  apt: name=nodejs state=present
