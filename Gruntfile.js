@@ -26,6 +26,17 @@ module.exports = function(grunt) {
                 }]
             }
         },
+        copy: {
+            main: {
+                expand: true,
+                flatten: true,
+                src: [
+                    "node_modules/two.js/build/two.js",
+                    "node_modules/underscore/underscore.js"
+                ],
+                dest: "public/js/", filter: 'isFile'
+            }
+        },
         watch: {
             scripts: {
                 files: "src/*.js",
@@ -41,6 +52,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-browserify");
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-contrib-htmlmin");
+    grunt.loadNpmTasks("grunt-contrib-copy");
 
-    grunt.registerTask("default", ["browserify", "htmlmin"]);
+    grunt.registerTask("default", ["browserify", "htmlmin", "copy"]);
 };
