@@ -1,13 +1,10 @@
-Windows:
-vagrant up
-vagrant ssh
-cd /project
-npm install --no-bin-links
-grunt
+Linux
+===
+Make sure vagrant and virtualbox are installed.
 
-Linux:
-vagrant up
-vagrant ssh
-cd /project
-npm install
-grunt
+  1. vagrant plugin install vagrant-vbguest
+  1. vagrant up
+  1. vagrant ssh
+  1. cd /project
+  1. npm install
+  1. grunt
