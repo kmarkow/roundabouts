@@ -7,52 +7,44 @@ module.exports = function(grunt) {
                     transform: [["babelify", { "stage": 0 }]]
                 },
                 files: {
-                    "public/js/roundabouts.js": "src/app.js"
+                    "src/roundabouts.js": "src/app.js"
                 }
-            }
-        },
-        htmlmin: {
-            dist: {
-                options: {
-                    removeComments: true,
-                    collapseWhitespace: true
-                },
-                files: [{
-                    "expand": true,
-                    "cwd": "src/",
-                    "src": ["**/*.html"],
-                    "dest": "public/js/",
-                    "ext": ".html"
-                }]
             }
         },
         copy: {
             main: {
-                expand: true,
-                flatten: true,
-                src: [
-                    "node_modules/two.js/build/two.js",
-                    "node_modules/underscore/underscore.js"
-                ],
-                dest: "public/js/", filter: 'isFile'
+                files: [
+                    //  Copy node dependencies to public
+                    {expand: true, flatten: true, src: ["node_modules/two.js/build/two.js"], dest: "public/js/", filter: 'isFile'},
+                    // Copy HTMLs
+                    {expand: true, flatten: true, src: ["src/GUI/**/*.html"], dest: "public/", filter: 'isFile'},
+                    // Copy roundabouts.js build file - the whole application without external libraries dependencies
+                    {expand: true, flatten: true, src: ["src/roundabouts.js"], dest: "public/js/", filter: 'isFile'}
+                ]
             }
         },
         watch: {
             scripts: {
-                files: "src/*.js",
-                tasks: ["browserify"]
+                files: "src/**/*.js",
+                tasks: ["build"]
             },
             html: {
-                files: "src/*.html",
-                tasks: ["htmlmin"]
+                files: "src/**/*.html",
+                tasks: ["build"]
+            }
+        },
+        karma: {
+            unit: {
+                configFile: 'karma.conf.js'
             }
         }
     });
 
     grunt.loadNpmTasks("grunt-browserify");
     grunt.loadNpmTasks("grunt-contrib-watch");
-    grunt.loadNpmTasks("grunt-contrib-htmlmin");
     grunt.loadNpmTasks("grunt-contrib-copy");
+    grunt.loadNpmTasks('grunt-karma');
 
-    grunt.registerTask("default", ["browserify", "htmlmin", "copy"]);
+    grunt.registerTask("build", ["browserify", "copy"]);
+    grunt.registerTask("tests", ["karma"]);
 };

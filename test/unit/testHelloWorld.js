@@ -1,4 +1,4 @@
-import HelloWorld from '../../src/app.js';
+import HelloWorld from '../../src/HelloWorld.js';
 
 describe("Unit testing ES6", function() {
 
