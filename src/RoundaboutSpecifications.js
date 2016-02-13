@@ -1,8 +1,9 @@
 class RoundaboutSpecification {
 
-    constructor(lanesWidth, islandRadius) {
+    constructor(lanesWidth, islandRadius, adherentRoadSpecification) {
         this._lanesWidth = lanesWidth;
         this._islandRadius = islandRadius;
+        this._adherentRoadSpecification = adherentRoadSpecification;
     }
 
     roundaboutDiameter() {
@@ -18,7 +19,7 @@ class RoundaboutSpecification {
     }
 
     roundaboutHeightWithRoads() {
-        return this.roundaboutDiameter() + this._incomingRoadLength() * 2;
+        return this.roundaboutDiameter() + this.adherentRoadLength() * 2;
     }
 
     lanesCount() {
@@ -29,13 +30,28 @@ class RoundaboutSpecification {
         return this._islandRadius;
     }
 
-    _incomingRoadLength() {
+    adherentRoadLength() {
         return NUMBER_OF_QUEUEING_CARS_TO_SHOW * METERS_PER_CELL;
+    }
+
+    adherentRoadWidth() {
+        return (
+            this._adherentRoadSpecification.ingoingLanes * this._adherentRoadSpecification.lanesWidth +
+            this._adherentRoadSpecification.outgoingLanes * this._adherentRoadSpecification.lanesWidth
+        );
     }
 }
 const NUMBER_OF_QUEUEING_CARS_TO_SHOW = 3;
 const METERS_PER_CELL = 7.5;
 
-var roundaboutBukowe = new RoundaboutSpecification([4.5, 4.5], 56/2);
+var roundaboutBukowe = new RoundaboutSpecification(
+    [4.5, 4.5],
+    56/2,
+    {
+        ingoingLanes: 2,
+        outgoingLanes: 2,
+        lanesWidth: 3.5
+    }
+);
 
 export {roundaboutBukowe};

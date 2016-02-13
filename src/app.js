@@ -6,5 +6,9 @@ let unitConverter = new UnitConverter(
     roundaboutBukowe.roundaboutHeightWithRoads(),
     Math.min(window.innerWidth, window.innerHeight)
 );
-let roundaboutDrawer = new RoundaboutDrawer(roundaboutBukowe, unitConverter);
-roundaboutDrawer.drawOn(document.body);
+let roundaboutDrawer = new RoundaboutDrawer(
+    roundaboutBukowe,
+    unitConverter,
+    document.body
+);
+roundaboutDrawer.draw();

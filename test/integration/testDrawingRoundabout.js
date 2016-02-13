@@ -6,21 +6,23 @@ describe("When I start Application", function() {
 
     var roundaboutDrawer;
     var unitConverter;
+    var canvasElement;
 
     beforeEach(()=>{
+        canvasElement = document.createElement("div");
         unitConverter  = new UnitConverter(
             roundaboutBukowe.roundaboutHeightWithRoads(),
             800
         );
         roundaboutDrawer = new RoundaboutDrawer(
             roundaboutBukowe,
-            unitConverter
+            unitConverter,
+            canvasElement
         );
     });
 
     it('I should see roundabout', ()=>{
-        var canvasElement = document.createElement("div");
-        roundaboutDrawer.drawOn(canvasElement);
+        roundaboutDrawer.draw();
         expect(canvasElement.innerHTML).toContain("svg");
     });
 });

@@ -8,5 +8,7 @@ describe("Test roundabout specifications", function() {
         expect(roundaboutBukowe.lanesCount()).toEqual(2);
         expect(roundaboutBukowe.roundaboutHeightWithRoads()).toEqual(45 + 74);
         expect(roundaboutBukowe.islandRadius()).toEqual(28);
+        expect(roundaboutBukowe.adherentRoadWidth()).toEqual(14);
+        expect(roundaboutBukowe.adherentRoadLength()).toEqual(22.5);
     });
 });
