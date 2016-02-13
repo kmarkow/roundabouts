@@ -1,8 +1,5 @@
-import HelloWorld from './HelloWorld.js';
 import RoundaboutDrawer from './GUI/RoundaboutDrawer.js';
-
-var hello = new HelloWorld();
-hello.sayHi();
+import {roundaboutBukowe} from './RoundaboutSpecifications.js';
 
 let roundaboutDrawer = new RoundaboutDrawer();
 roundaboutDrawer.drawOn(document.body);
