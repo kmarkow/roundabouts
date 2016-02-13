@@ -1,17 +1,15 @@
 class RoundaboutSpecification {
 
-    constructor(lanesWidth, islandRadius, adherentRoadSpecification) {
-        this._lanesWidth = lanesWidth;
+    constructor(laneWidth, lanesCount, islandRadius, adherentRoadSpecification) {
+        this._laneWidth = laneWidth;
+        this._lanesCount = lanesCount;
         this._islandRadius = islandRadius;
         this._adherentRoadSpecification = adherentRoadSpecification;
     }
 
     roundaboutDiameter() {
         let islandDiameter = 2 * this._islandRadius;
-        let lanesWidth = this._lanesWidth.reduce(function(previousValue, currentValue) {
-            return previousValue + currentValue;
-        });
-        return islandDiameter + lanesWidth * 2;
+        return islandDiameter + this.lanesWidth() * 2;
     }
 
     roundaboutRadius() {
@@ -23,7 +21,15 @@ class RoundaboutSpecification {
     }
 
     lanesCount() {
-        return this._lanesWidth.length;
+        return this._lanesCount;
+    }
+
+    lanesWidth() {
+        return this.lanesCount() * this.laneWidth();
+    }
+
+    laneWidth() {
+        return this._laneWidth;
     }
 
     islandRadius() {
@@ -45,7 +51,8 @@ const NUMBER_OF_QUEUEING_CARS_TO_SHOW = 3;
 const METERS_PER_CELL = 7.5;
 
 var roundaboutBukowe = new RoundaboutSpecification(
-    [4.5, 4.5],
+    4.5,
+    2,
     56/2,
     {
         ingoingLanes: 2,
