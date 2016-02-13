@@ -1,8 +1,11 @@
-
 class RoundaboutDrawer {
 
+    constructor(roundaboutSpecification, unitConverter) {
+        this.roundaboutSpecification = roundaboutSpecification;
+        this.unitConverter = unitConverter;
+    }
+
     /**
-     * #TODO Make it draw a roundabout and clean up the code
      * @param canvas
      */
     drawOn(canvas) {
@@ -11,44 +14,32 @@ class RoundaboutDrawer {
             autostart: true
         }).appendTo(canvas);
 
-
-        var centerPoint = this._countCenterPoint();
-        var roundaboutRadius = this._countRoundaboutRadius();
-
+        var centerPoint =  {
+            x: two.width / 2,
+            y: two.height / 2
+        };
         console.log(centerPoint);
+        var roundaboutRadiusPx =  this.unitConverter.metersAsPixels(
+            this.roundaboutSpecification.roundaboutRadius()
+        );
+        var islandRadiusPx = this.unitConverter.metersAsPixels(
+          this.roundaboutSpecification.islandRadius()
+        );
+
         var background = two.makeCircle(
             centerPoint.x,
             centerPoint.y,
-            roundaboutRadius
+            roundaboutRadiusPx
         );
         background.fill = "#000000";
 
         var island = two.makeCircle(
             centerPoint.x,
             centerPoint.y,
-            roundaboutRadius*0.7
+            islandRadiusPx
         )
         island.fill = "#00FF00";
-    }
-
-    /**
-     * Count center point of browser assuming Zero-Zero point is in lower-left corner
-     * //TODO: Inject window via constructor or possible to change to two.height.width?
-     * @returns {{x: number, y: number}}
-     */
-    _countCenterPoint() {
-        return {
-            x: window.innerWidth / 2,
-            y: window.innerHeight / 2 //
-        }
-    }
-
-    /**
-     * This should be 70% of the screen
-     */
-    _countRoundaboutRadius() {
-        return Math.min(window.innerWidth, window.innerHeight) / 2;
-    }
+   }
 }
 
 export default RoundaboutDrawer;
