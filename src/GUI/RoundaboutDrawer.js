@@ -11,7 +11,7 @@ class RoundaboutDrawer {
             x: this._two.width / 2,
             y: this._two.height / 2
         };
-        this._letRoadMeltIntoRoundabout = 0;
+        this._letRoadMeltIntoRoundabout = 35;
     }
 
     draw() {
@@ -48,8 +48,8 @@ class RoundaboutDrawer {
                 var singleLine = this._two.makeRectangle(
                     this._centerPoint.x + x,
                     this._centerPoint.y + y,
-                    5,
-                    1
+                    21,
+                    3
                 );
                 singleLine.noStroke();
                 singleLine.fill = "#FFFFFF";
