@@ -11,7 +11,7 @@ class RoundaboutDrawer {
             x: this._two.width / 2,
             y: this._two.height / 2
         };
-        this._letRoadMeltIntoRoundabout = 10;
+        this._letRoadMeltIntoRoundabout = 0;
     }
 
     draw() {
@@ -79,33 +79,32 @@ class RoundaboutDrawer {
         );
         var pixelsFromCenterToRoadCenter = roundaboutRadiusPx + roadLengthPx/2;
 
-
-        var southRoad = this._drawRoad(false);
+        var southRoad = this._drawRoad();
         southRoad.translation.set(
             this._centerPoint.x,
             this._centerPoint.y + pixelsFromCenterToRoadCenter
         );
-
-        var northRoad = this._drawRoad(false);
-        northRoad.translation.set(
-            this._centerPoint.x,
-            this._centerPoint.y - pixelsFromCenterToRoadCenter
-        );
-
-        var westRoad = this._drawRoad(true);
+        var westRoad = this._drawRoad();
         westRoad.translation.set(
             this._centerPoint.x - pixelsFromCenterToRoadCenter,
             this._centerPoint.y
         );
-
-        var eastRoad = this._drawRoad(true);
+        westRoad.rotation += 1*Math.PI / 2;
+        var northRoad = this._drawRoad();
+        northRoad.translation.set(
+            this._centerPoint.x,
+            this._centerPoint.y - pixelsFromCenterToRoadCenter
+        );
+        northRoad.rotation += 2*Math.PI / 2;
+        var eastRoad = this._drawRoad();
         eastRoad.translation.set(
             this._centerPoint.x + pixelsFromCenterToRoadCenter,
             this._centerPoint.y
         );
+        eastRoad.rotation += 3*Math.PI / 2;
     }
 
-    _drawRoad(isHorizontal) {
+    _drawRoad() {
         var roadLengthPx = this._unitConverter.metersAsPixels(
             this._roundaboutSpecification.adherentRoadLength()
         ) + this._letRoadMeltIntoRoundabout;
@@ -122,49 +121,51 @@ class RoundaboutDrawer {
         );
         road.fill = "#0F0F0F";
 
-        // Create line splitting element
-        var mainLine = this._two.makeLine(
-            0,
-            0 - roadLengthPx / 2,
-            0,
-            0 + roadLengthPx / 2
+        var middleLine = this._drawContinuousLine(roadLengthPx);
+        var leftLines = this._drawStraightBrokenLine(-roadWidthPx / 4, roadLengthPx);
+        var rightLines = this._drawStraightBrokenLine(roadWidthPx / 4, roadLengthPx);
+        var groupedElements = [road, middleLine].concat(
+            leftLines,
+            rightLines
         );
-        mainLine.stroke = "#FFFFFF";
 
-        // TODO: Draw this broken line
-        //var linesToDraw = 6;
-        //var lineStartingY = - roadLengthPx / 2;
-        //var lineEndingY = + roadLengthPx / 2
-        //var lineLength = roadLengthPx;
-        //
-        //for (var i = 0; i < linesToDraw; i++) {
-        //    var thisStarts = lineStartingY + (i / linesToDraw) * lineLength;
-        //    var thisEnds = lineEndingY + (i + 1/ linesToDraw) * lineLength;
-        //    var brokenLine = this._two.makeLine(
-        //        roadWidthPx / 4,
-        //        lineStartingY + thisStarts,
-        //        roadWidthPx / 4,
-        //        lineEndingY + thisEnds
-        //    );
-        //    brokenLine.stroke = "#FFFFFF";
-        //}
-
-
-        var brokenLine2 = this._two.makeLine(
-            -roadWidthPx / 4,
-            0 - roadLengthPx / 2,
-            -roadWidthPx / 4,
-            0 + roadLengthPx / 2
-        );
-        brokenLine2.stroke = "#FFFFFF";
-
-        var wholeRoad = this._two.makeGroup([road, mainLine, brokenLine2]);
-
-        if (isHorizontal) {
-            wholeRoad.rotation += Math.PI / 2; // 90 degrees as radians
-        }
-
+        var wholeRoad = this._two.makeGroup(groupedElements);
         return wholeRoad;
+    }
+
+    _drawStraightBrokenLine(xPos, lineLength) {
+        var groupedElements = [];
+        var linesToDraw = 16;
+        var lineStartingY = - lineLength / 2;
+
+        for (var i = 0; i < linesToDraw; i++) {
+            var thisStarts = lineStartingY + (i / linesToDraw) * lineLength;
+            var thisEnds = thisStarts + (1 / linesToDraw) * lineLength;
+
+            // Draw dotted line or continuous line on the beginning of the road
+            if (i % 2 == 0 || i < 4) {
+                var brokenLine = this._two.makeLine(
+                    xPos,
+                    thisStarts,
+                    xPos,
+                    thisEnds
+                );
+                brokenLine.stroke = "#FFFFFF";
+                groupedElements.push(brokenLine);
+            }
+        }
+        return groupedElements;
+    }
+
+    _drawContinuousLine(roadLengthPx) {
+        var line = this._two.makeLine(
+            0,
+            0 - roadLengthPx / 2,
+            0,
+            0 + roadLengthPx / 2
+        );
+        line.stroke = "#FFFFFF";
+        return line;
     }
 }
 
