@@ -9,6 +9,7 @@ describe("Test roundabout specifications", function() {
         expect(roundaboutBukowe.islandRadius()).toEqual(28);
         expect(roundaboutBukowe.adherentRoadWidth()).toEqual(14);
         expect(roundaboutBukowe.adherentRoadsCount()).toEqual(4);
+        expect(roundaboutBukowe.lanesNumbers()).toEqual([0, 1]);
     });
 
     it('Counts max cells that can fit onto a roundabout lane', () => {

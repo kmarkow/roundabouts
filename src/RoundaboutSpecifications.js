@@ -1,3 +1,5 @@
+import {range} from './JsWhyYouNoImplement.js';
+
 class RoundaboutSpecification {
 
     constructor(laneWidth, lanesCount, islandRadius, adherentRoadSpecification) {
@@ -22,6 +24,10 @@ class RoundaboutSpecification {
 
     lanesWidth() {
         return this.lanesCount() * this.laneWidth();
+    }
+
+    lanesNumbers() {
+        return range(0, this.lanesCount());
     }
 
     laneWidth() {
