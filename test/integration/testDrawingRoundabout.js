@@ -1,4 +1,4 @@
-import RoundaboutDrawer from '../../src/GUI/RoundaboutDrawer.js';
+import {RoundaboutDrawer, ADHERENT_ROAD_LENGTH} from '../../src/GUI/RoundaboutDrawer.js';
 import UnitConverter from '../../src/GUI/UnitConverter.js';
 import {roundaboutBukowe} from '../../src/RoundaboutSpecifications.js';
 
@@ -11,7 +11,7 @@ describe("When I start Application", function() {
     beforeEach(()=>{
         canvasElement = document.createElement("div");
         unitConverter  = new UnitConverter(
-            roundaboutBukowe.roundaboutHeightWithRoads(),
+            ADHERENT_ROAD_LENGTH,
             800
         );
         roundaboutDrawer = new RoundaboutDrawer(

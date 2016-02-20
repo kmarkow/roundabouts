@@ -1,3 +1,8 @@
+const DRAW_CELLS_GRID = true;
+const NUMBER_OF_QUEUEING_CARS_TO_DRAW = 3;
+const METERS_PER_CELL = 7.5;
+const ADHERENT_ROAD_LENGTH = NUMBER_OF_QUEUEING_CARS_TO_DRAW * METERS_PER_CELL;
+
 class RoundaboutDrawer {
 
     constructor(roundaboutSpecification, unitConverter, canvas) {
@@ -11,7 +16,7 @@ class RoundaboutDrawer {
             x: this._two.width / 2,
             y: this._two.height / 2
         };
-        this._letRoadMeltIntoRoundabout = 35;
+        this._letRoadMeltIntoRoundabout = 7;
     }
 
     draw() {
@@ -19,6 +24,7 @@ class RoundaboutDrawer {
         this._drawRoundaboutRoads();
         this._drawRoundaboutBrokenLanes();
         this._drawIsland();
+        this._drawRoundaboutGrid();
     }
 
     _drawRoundaboutRoads() {
@@ -48,8 +54,8 @@ class RoundaboutDrawer {
                 var singleLine = this._two.makeRectangle(
                     this._centerPoint.x + x,
                     this._centerPoint.y + y,
-                    21,
-                    3
+                    5,
+                    1
                 );
                 singleLine.noStroke();
                 singleLine.fill = "#FFFFFF";
@@ -72,7 +78,7 @@ class RoundaboutDrawer {
 
     _drawAdherentRoads() {
         var roadLengthPx = this._unitConverter.metersAsPixels(
-            this._roundaboutSpecification.adherentRoadLength()
+            ADHERENT_ROAD_LENGTH
         );
         var roundaboutRadiusPx =  this._unitConverter.metersAsPixels(
             this._roundaboutSpecification.roundaboutRadius()
@@ -106,7 +112,7 @@ class RoundaboutDrawer {
 
     _drawRoad() {
         var roadLengthPx = this._unitConverter.metersAsPixels(
-            this._roundaboutSpecification.adherentRoadLength()
+                ADHERENT_ROAD_LENGTH
         ) + this._letRoadMeltIntoRoundabout;
         var roadWidthPx = this._unitConverter.metersAsPixels(
             this._roundaboutSpecification.adherentRoadWidth()
@@ -124,13 +130,73 @@ class RoundaboutDrawer {
         var middleLine = this._drawContinuousLine(roadLengthPx);
         var leftLines = this._drawStraightBrokenLine(-roadWidthPx / 4, roadLengthPx);
         var rightLines = this._drawStraightBrokenLine(roadWidthPx / 4, roadLengthPx);
+        var cellsGrid = this._drawAdherentRoadsGrid(roadWidthPx, roadLengthPx);
+
         var groupedElements = [road, middleLine].concat(
             leftLines,
-            rightLines
+            rightLines,
+            cellsGrid
         );
 
         var wholeRoad = this._two.makeGroup(groupedElements);
         return wholeRoad;
+    }
+
+    _drawRoundaboutGrid() {
+        if (!DRAW_CELLS_GRID) {
+            return;
+        }
+        for (var laneNumber = 0; laneNumber < this._roundaboutSpecification.lanesCount(); laneNumber++) {
+            var laneRadius = this._roundaboutSpecification.islandRadius() + this._roundaboutSpecification.laneWidth()/2 + this._roundaboutSpecification.laneWidth()*laneNumber;
+            var laneRadiusPx = this._unitConverter.metersAsPixels(laneRadius);
+            var cellsCount = Math.floor(this._roundaboutSpecification.lengthOfLane(laneNumber) / METERS_PER_CELL);
+
+            for (var j = 0; j < cellsCount; j++) {
+                var pct = j / cellsCount;
+                var theta = pct * Math.PI * 2;
+                var x = laneRadiusPx * Math.cos(theta);
+                var y = laneRadiusPx * Math.sin(theta);
+
+                var cellLengthPx = this._unitConverter.metersAsPixels(METERS_PER_CELL);
+                var cellWidthPx =  this._unitConverter.metersAsPixels(this._roundaboutSpecification.laneWidth());
+                var singleLine = this._two.makeRectangle(
+                    this._centerPoint.x + x,
+                    this._centerPoint.y + y,
+                    cellLengthPx,
+                    cellWidthPx
+                );
+                singleLine.stroke = "#FF0000";
+                singleLine.fill = "transparent";
+                singleLine.rotation = Math.atan2(-y, -x) + Math.PI / 2;
+            }
+        }
+    }
+
+    _drawAdherentRoadsGrid(roadWidthPx, roadLengthPx) {
+        if (!DRAW_CELLS_GRID) {
+            return [];
+        }
+        var adherentRoadsCount = this._roundaboutSpecification.adherentRoadsCount();
+        var cells = [];
+        var cellLengthPx = this._unitConverter.metersAsPixels(METERS_PER_CELL);
+        var cellWidthPx = this._unitConverter.metersAsPixels(
+            this._roundaboutSpecification.adherentRoadWidth() / adherentRoadsCount
+        );
+
+        for (var i=0; i < adherentRoadsCount; i++) {
+            for (var j = 0; j < NUMBER_OF_QUEUEING_CARS_TO_DRAW; j++) {
+                var cell = this._two.makeRectangle(
+                    - roadWidthPx / adherentRoadsCount + (i / adherentRoadsCount)* roadWidthPx - cellWidthPx / 2,
+                    roadLengthPx / 2 - cellLengthPx / 2 - j * cellLengthPx,
+                    cellWidthPx,
+                    cellLengthPx
+                );
+                cell.stroke = "#FF0000";
+                cell.fill = "transparent";
+                cells.push(cell);
+            }
+        }
+        return cells;
     }
 
     _drawStraightBrokenLine(xPos, lineLength) {
@@ -169,4 +235,4 @@ class RoundaboutDrawer {
     }
 }
 
-export default RoundaboutDrawer;
+export {RoundaboutDrawer, ADHERENT_ROAD_LENGTH};

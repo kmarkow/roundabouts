@@ -1,9 +1,9 @@
-import RoundaboutDrawer from './GUI/RoundaboutDrawer.js';
+import {RoundaboutDrawer, ADHERENT_ROAD_LENGTH} from './GUI/RoundaboutDrawer.js';
 import UnitConverter from './GUI/UnitConverter.js';
-import {roundaboutBukowe} from './RoundaboutSpecifications.js';
+import {roundaboutBukowe, roundaboutThreeLanes} from './RoundaboutSpecifications.js';
 
 let unitConverter = new UnitConverter(
-    roundaboutBukowe.roundaboutHeightWithRoads(),
+    roundaboutBukowe.roundaboutDiameter() + ADHERENT_ROAD_LENGTH * 2,
     Math.min(window.innerWidth, window.innerHeight)
 );
 let roundaboutDrawer = new RoundaboutDrawer(
