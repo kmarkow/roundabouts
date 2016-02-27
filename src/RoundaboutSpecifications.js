@@ -55,6 +55,17 @@ class RoundaboutSpecification {
         }
         return (2 * Math.PI * (this.islandRadius() + laneNumber * this.laneWidth()));
     }
+
+    /**
+     * Radius is counted to center of the lane
+     */
+    laneRadius(laneNumber) {
+        if (laneNumber >= this.lanesCount()) {
+            throw new Error("Incorrect lane number - 0 is the most inner, 1 is outer.");
+        }
+
+        return this.islandRadius() + this.laneWidth()*laneNumber + this.laneWidth()/2;
+    }
 }
 
 var roundaboutBukowe = new RoundaboutSpecification(

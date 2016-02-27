@@ -5,8 +5,9 @@ const ADHERENT_ROAD_LENGTH = NUMBER_OF_QUEUEING_CARS_TO_DRAW * METERS_PER_CELL;
 
 class RoundaboutDrawer {
 
-    constructor(roundaboutSpecification, unitConverter, canvas) {
+    constructor(roundaboutSpecification, cellsMap, unitConverter, canvas) {
         this._roundaboutSpecification = roundaboutSpecification;
+        this._cellsMap = cellsMap;
         this._unitConverter = unitConverter;
         this._two = new Two({
             fullscreen: true,
@@ -146,19 +147,18 @@ class RoundaboutDrawer {
         if (!DRAW_CELLS_GRID) {
             return;
         }
-        for (var laneNumber = 0; laneNumber < this._roundaboutSpecification.lanesCount(); laneNumber++) {
-            var laneRadius = this._roundaboutSpecification.islandRadius() + this._roundaboutSpecification.laneWidth()/2 + this._roundaboutSpecification.laneWidth()*laneNumber;
-            var laneRadiusPx = this._unitConverter.metersAsPixels(laneRadius);
-            var cellsCount = Math.floor(this._roundaboutSpecification.lengthOfLane(laneNumber) / METERS_PER_CELL);
+        var cellLengthPx = this._unitConverter.cellsAsPixels(1);
+        var cellWidthPx =  this._unitConverter.metersAsPixels(this._roundaboutSpecification.laneWidth());
 
-            for (var j = 0; j < cellsCount; j++) {
-                var pct = j / cellsCount;
+        this._roundaboutSpecification.lanesNumbers().forEach(laneNumber => {
+            var laneRadiusPx = this._unitConverter.metersAsPixels(this._roundaboutSpecification.laneRadius(laneNumber));
+            var cellsCount = this._unitConverter.metersAsCells(this._roundaboutSpecification.lengthOfLane(laneNumber));
+
+            this._cellsMap.cellsOnLane(laneNumber).forEach((cell, cellIndex) => {
+                var pct = cellIndex / cellsCount;
                 var theta = pct * Math.PI * 2;
                 var x = laneRadiusPx * Math.cos(theta);
                 var y = laneRadiusPx * Math.sin(theta);
-
-                var cellLengthPx = this._unitConverter.metersAsPixels(METERS_PER_CELL);
-                var cellWidthPx =  this._unitConverter.metersAsPixels(this._roundaboutSpecification.laneWidth());
                 var singleLine = this._two.makeRectangle(
                     this._centerPoint.x + x,
                     this._centerPoint.y + y,
@@ -168,8 +168,9 @@ class RoundaboutDrawer {
                 singleLine.stroke = "#FF0000";
                 singleLine.fill = "transparent";
                 singleLine.rotation = Math.atan2(-y, -x) + Math.PI / 2;
-            }
-        }
+            });
+
+        });
     }
 
     _drawAdherentRoadsGrid(roadWidthPx, roadLengthPx) {
@@ -178,7 +179,7 @@ class RoundaboutDrawer {
         }
         var adherentRoadsCount = this._roundaboutSpecification.adherentRoadsCount();
         var cells = [];
-        var cellLengthPx = this._unitConverter.metersAsPixels(METERS_PER_CELL);
+        var cellLengthPx = this._unitConverter.cellsAsPixels(1);
         var cellWidthPx = this._unitConverter.metersAsPixels(
             this._roundaboutSpecification.adherentRoadWidth() / adherentRoadsCount
         );
