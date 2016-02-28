@@ -39,5 +39,7 @@ let roundaboutCellsDrawer = new CellsDrawer(
 
 roundaboutDrawer.draw();
 setInterval(() => {
-    roundaboutCellsDrawer.draw();
-}, 1500);
+    roundaboutBukoweCellsMap.nextIteration();
+}, 500);
+
+

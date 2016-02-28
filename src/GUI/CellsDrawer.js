@@ -1,4 +1,4 @@
-const DRAW_CELLS_GRID = true;
+const DEBUG = false;
 
 class CellsDrawer {
     constructor(roundaboutSpecification, cellsMap, unitConverter, two) {
@@ -10,48 +10,68 @@ class CellsDrawer {
             x: this._two.width / 2,
             y: this._two.height / 2
         };
+        this._cellsMap.registerObserver(this);
+        this._drawnCells = [];
+        this._cellLengthPx = this._unitConverter.cellsAsPixels(1);
+    }
+
+    /**
+     * Handle change in cellsMap and refresh view.
+     * Implements observer Pattern.
+     */
+    notify() {
+        this.draw();
     }
 
     draw() {
-        this._cellsMap.nextIteration();
+        this._clearDrawnElements();
         this._drawRoundaboutGrid();
     }
 
+    _clearDrawnElements() {
+        this._two.remove(this._drawnCells);
+    }
+
     _drawRoundaboutGrid() {
-        if (!DRAW_CELLS_GRID) {
-            return;
-        }
-        var cellLengthPx = this._unitConverter.cellsAsPixels(1);
         var cellWidthPx =  this._unitConverter.metersAsPixels(this._roundaboutSpecification.laneWidth());
 
         this._roundaboutSpecification.lanesNumbers().forEach(laneNumber => {
             var laneRadiusPx = this._unitConverter.metersAsPixels(this._roundaboutSpecification.laneRadius(laneNumber));
             var cellsCount = this._unitConverter.metersAsCells(this._roundaboutSpecification.lengthOfLane(laneNumber));
-
             this._cellsMap.cellsOnLane(laneNumber).forEach((cell, cellIndex) => {
                 var pct = cellsCount - cellIndex / cellsCount;
                 var theta = pct * Math.PI * 2;
                 var x = laneRadiusPx * Math.cos(theta);
                 var y = laneRadiusPx * Math.sin(theta);
-                var singleLine = this._two.makeRectangle(
+                var singleCell = this._two.makeRectangle(
                     this._centerPoint.x + x,
                     this._centerPoint.y + y,
-                    cellLengthPx,
+                    this._cellLengthPx,
                     cellWidthPx
                 );
-                singleLine.stroke = "#FF0000";
-                singleLine.fill = this._cellFillColor(cell);
-                singleLine.rotation = Math.atan2(-y, -x) + Math.PI / 2;
+                singleCell.rotation = Math.atan2(-y, -x) + Math.PI / 2;
+                this._cellFillColor(cell, singleCell);
+                this._drawStrokeIfDebug(singleCell);
+                this._drawnCells.push(singleCell);
             });
 
         });
     }
 
-    _cellFillColor(cell) {
+    _cellFillColor(cell, cellElement) {
         if (cell.isTaken()) {
-            return "#FF0000";
+            cellElement.fill = "#FF0000";
+        } else {
+            cellElement.fill = "transparent";
         }
-        return "transparent";
+    }
+
+    _drawStrokeIfDebug(cellElement) {
+        if (DEBUG) {
+            cellElement.stroke = "#FF0000";
+        } else {
+            cellElement.noStroke();
+        }
     }
 }
 

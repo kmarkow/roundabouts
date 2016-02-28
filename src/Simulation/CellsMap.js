@@ -1,13 +1,16 @@
 import {range} from '../JsWhyYouNoImplement.js';
 import Cell from './Cell.js';
+import Observable from './Observable.js';
 
-class CellsMap {
+class CellsMap extends Observable {
 
     constructor(roundaboutSpecification, unitConverter) {
+        super();
         this._roundaboutSpecification = roundaboutSpecification;
         this._unitConverter = unitConverter;
         this._laneCells = {};
         this._divideLanesToCells();
+        this._counter = 0;
     }
 
     nextCellFor(cellToFind) {
@@ -43,6 +46,13 @@ class CellsMap {
 
     cellsOnLane(laneNumber) {
         return this._laneCells[laneNumber];
+    }
+
+    nextIteration() {
+        this._laneCells[0][this._counter].setTaken(false);
+        this._counter++;
+        this._laneCells[0][this._counter].setTaken(true);
+        this.notifyAll();
     }
 }
 
