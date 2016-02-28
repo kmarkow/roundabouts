@@ -166,7 +166,7 @@ class RoundaboutDrawer {
                     cellWidthPx
                 );
                 singleLine.stroke = "#FF0000";
-                singleLine.fill = "transparent";
+                singleLine.fill = this._cellFillColor(cell);
                 singleLine.rotation = Math.atan2(-y, -x) + Math.PI / 2;
             });
 
@@ -233,6 +233,13 @@ class RoundaboutDrawer {
         );
         line.stroke = "#FFFFFF";
         return line;
+    }
+
+    _cellFillColor(cell) {
+        if (cell.isTaken()) {
+            return "#FF0000";
+        }
+        return "transparent";
     }
 }
 
