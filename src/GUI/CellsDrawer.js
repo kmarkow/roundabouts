@@ -1,4 +1,4 @@
-const DEBUG = false;
+const DEBUG = true;
 
 class CellsDrawer {
     constructor(roundaboutSpecification, cellsMap, unitConverter, two) {

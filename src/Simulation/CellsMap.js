@@ -10,7 +10,8 @@ class CellsMap extends Observable {
         this._unitConverter = unitConverter;
         this._laneCells = {};
         this._divideLanesToCells();
-        this._counter = 0;
+        this._laneCells[0][0].setTaken(true);
+        this._laneCells[1][0].setTaken(true);
     }
 
     nextCellFor(cellToFind) {
@@ -49,9 +50,21 @@ class CellsMap extends Observable {
     }
 
     nextIteration() {
-        this._laneCells[0][this._counter].setTaken(false);
-        this._counter++;
-        this._laneCells[0][this._counter].setTaken(true);
+        var markAsTaken = [];
+
+        this._roundaboutSpecification.lanesNumbers().forEach(laneNumber => {
+            this.cellsOnLane(laneNumber).forEach(cell => {
+                if(cell.isTaken()) {
+                    markAsTaken.push(cell);
+                }
+            })
+        });
+
+        markAsTaken.forEach(cell => {
+            var nextCell = this.nextCellFor(cell);
+            nextCell.setTaken(true);
+            cell.setTaken(false);
+        });
         this.notifyAll();
     }
 }
