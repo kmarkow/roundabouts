@@ -1,7 +1,6 @@
 import {RoundaboutDrawer, ADHERENT_ROAD_LENGTH} from '../../src/GUI/RoundaboutDrawer.js';
 import UnitConverter from '../../src/GUI/UnitConverter.js';
 import {roundaboutBukowe} from '../../src/RoundaboutSpecifications.js';
-import {CellsMap} from '../../src/Simulation/CellsMap.js';
 
 describe("When I start Application", function() {
 
@@ -11,15 +10,19 @@ describe("When I start Application", function() {
 
     beforeEach(()=>{
         canvasElement = document.createElement("div");
+        let twojs = new Two({
+            fullscreen: true,
+            autostart: true
+        }).appendTo(canvasElement);
+
         unitConverter  = new UnitConverter(
             ADHERENT_ROAD_LENGTH,
             800
         );
         roundaboutDrawer = new RoundaboutDrawer(
             roundaboutBukowe,
-            new CellsMap(roundaboutBukowe, unitConverter),
             unitConverter,
-            canvasElement
+            twojs
         );
     });
 
