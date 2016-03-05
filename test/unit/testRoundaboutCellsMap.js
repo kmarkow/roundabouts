@@ -17,11 +17,12 @@ describe("Test roundabout cells map", function() {
     });
 
     it('Can go all the way around a roundabout', () => {
+        var cellsCount = cellsMap.cellsOnLane(0).length;
         let firstCell = new Cell(0, 0);
         let secondCell = new Cell(0, 1);
         let thirdCell = new Cell(0, 2)
-        let lastButOneCell = new Cell(0, 21);
-        let lastCell = new Cell(0, 22);
+        let lastButOneCell = new Cell(0, cellsCount-2);
+        let lastCell = new Cell(0, cellsCount-1);
 
         expect(cellsMap.nextCellFor(firstCell).equals(secondCell)).toBeTruthy();
         expect(cellsMap.nextCellFor(secondCell).equals(thirdCell)).toBeTruthy();

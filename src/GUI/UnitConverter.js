@@ -1,4 +1,4 @@
-const METERS_PER_CELL = 7.5;
+const METERS_PER_CELL = 2.5;
 
 class UnitConverter {
 

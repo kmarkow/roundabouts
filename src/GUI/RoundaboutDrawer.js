@@ -1,7 +1,7 @@
 const DRAW_CELLS_GRID = true;
-const NUMBER_OF_QUEUEING_CARS_TO_DRAW = 3;
-const METERS_PER_CELL = 7.5;
-const ADHERENT_ROAD_LENGTH = NUMBER_OF_QUEUEING_CARS_TO_DRAW * METERS_PER_CELL;
+const METERS_PER_CELL = 2.5;
+const CELLS_TO_DRAW = 10;
+const ADHERENT_ROAD_LENGTH = METERS_PER_CELL * CELLS_TO_DRAW; // Draw 25m of adherent roads for now
 
 class RoundaboutDrawer {
 
@@ -150,7 +150,7 @@ class RoundaboutDrawer {
         );
 
         for (var i=0; i < adherentRoadsCount; i++) {
-            for (var j = 0; j < NUMBER_OF_QUEUEING_CARS_TO_DRAW; j++) {
+            for (var j = 0; j < CELLS_TO_DRAW; j++) {
                 var cell = this._two.makeRectangle(
                     - roadWidthPx / adherentRoadsCount + (i / adherentRoadsCount)* roadWidthPx - cellWidthPx / 2,
                     roadLengthPx / 2 - cellLengthPx / 2 - j * cellLengthPx,
