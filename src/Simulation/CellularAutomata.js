@@ -18,12 +18,12 @@ class CellularAutomata {
             van
         ];
         this._cellsMap = cellsMap;
-        this._cellsMap.addVehicle(car1, 0, Math.floor((Math.random() * 69) + 1));
-        this._cellsMap.addVehicle(car2, 0, Math.floor((Math.random() * 69) + 1));
-        this._cellsMap.addVehicle(car3, 0, Math.floor((Math.random() * 69) + 1));
-        this._cellsMap.addVehicle(car4, 0, Math.floor((Math.random() * 69) + 1));
-        this._cellsMap.addVehicle(truck, 0, Math.floor((Math.random() * 69) + 1));
-        this._cellsMap.addVehicle(van, 0, Math.floor((Math.random() * 69) + 1));
+        this._cellsMap.addVehicle(car1, 1, Math.floor((Math.random() * 69) + 1));
+        this._cellsMap.addVehicle(car2, 1, Math.floor((Math.random() * 69) + 1));
+        this._cellsMap.addVehicle(car3, 1, Math.floor((Math.random() * 69) + 1));
+        this._cellsMap.addVehicle(car4, 1, Math.floor((Math.random() * 69) + 1));
+        this._cellsMap.addVehicle(truck, 1, Math.floor((Math.random() * 69) + 1));
+        this._cellsMap.addVehicle(van, 1, Math.floor((Math.random() * 69) + 1));
     }
 
     nextIteration() {

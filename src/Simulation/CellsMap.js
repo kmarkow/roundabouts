@@ -42,7 +42,6 @@ class CellsMap extends Observable {
             throw Error("Vehicle not added");
         }
         var newVehicleFrontCell = this._cellsLane[oldVehicleFrontCell.parentLane()].cellsNextTo(oldVehicleFrontCell, cellsToMove).slice(-1)[0];
-        console.log("dupka", oldVehicleFrontCell, newVehicleFrontCell, cellsToMove);
         var newVehicleCells = this._cellsLane[newVehicleFrontCell.parentLane()].cellsPreviousTo(newVehicleFrontCell, vehicle.lengthCells());
         oldVehicleCells.forEach(cell => {
             cell.setTaken(false);

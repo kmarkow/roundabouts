@@ -1,4 +1,4 @@
-const DRAW_CELLS_GRID = true;
+const DRAW_CELLS_GRID = false;
 const METERS_PER_CELL = 2.5;
 const CELLS_TO_DRAW = 10;
 const ADHERENT_ROAD_LENGTH = METERS_PER_CELL * CELLS_TO_DRAW; // Draw 25m of adherent roads for now

@@ -10,10 +10,12 @@ let unitConverter = new UnitConverter(
     Math.min(window.innerWidth, window.innerHeight)
 );
 
+var canvasElement = document.getElementById("canvas");
 let twojs = new Two({
-    fullscreen: true,
+    width: canvasElement.clientWidth,
+    height: window.innerHeight,
     autostart: true
-}).appendTo(document.body);
+}).appendTo(canvasElement);
 
 let roundaboutBukoweCellsMap = new CellsMap(
     roundaboutBukowe,

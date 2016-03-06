@@ -1,5 +1,3 @@
-const DEBUG = true;
-
 class CellsDrawer {
     constructor(roundaboutSpecification, cellsMap, unitConverter, two) {
         this._cellsMap = cellsMap;
@@ -67,7 +65,7 @@ class CellsDrawer {
     }
 
     _drawStrokeIfDebug(cellElement) {
-        if (DEBUG) {
+        if (document.getElementById("debug_on").checked) {
             cellElement.stroke = "#FF0000";
         } else {
             cellElement.noStroke();
