@@ -2,6 +2,7 @@ import { CellsMap } from '../../src/Simulation/CellsMap.js';
 import Cell from '../../src/Simulation/Cell.js';
 import UnitConverter from '../../src/GUI/UnitConverter.js';
 import {roundaboutBukowe} from '../../src/RoundaboutSpecifications.js';
+import Vehicle from '../../src/Simulation/Vehicle.js'
 
 describe("Test roundabout cells map", function() {
 
@@ -16,25 +17,16 @@ describe("Test roundabout cells map", function() {
         cellsMap = new CellsMap(roundaboutBukowe, unitConverter)
     });
 
-    it('Can go all the way around a roundabout', () => {
-        var cellsCount = cellsMap.cellsOnLane(0).length;
-        let firstCell = new Cell(0, 0);
-        let secondCell = new Cell(0, 1);
-        let thirdCell = new Cell(0, 2)
-        let lastButOneCell = new Cell(0, cellsCount-2);
-        let lastCell = new Cell(0, cellsCount-1);
+    it('Accurately says if there is nothing in front of a vehicle', () => {
+        var car1 = Vehicle.newCar();
+        var car2 = Vehicle.newCar();
 
-        expect(cellsMap.nextCellFor(firstCell).equals(secondCell)).toBeTruthy();
-        expect(cellsMap.nextCellFor(secondCell).equals(thirdCell)).toBeTruthy();
-        // ..
-        expect(cellsMap.nextCellFor(lastButOneCell).equals(lastCell)).toBeTruthy();
-        expect(cellsMap.nextCellFor(lastCell).equals(firstCell)).toBeTruthy();
-    });
+        var distanceBetweenCar1And2 = 1;
+        cellsMap.addVehicle(car1, 0, distanceBetweenCar1And2 + car1.lengthCells());
+        cellsMap.addVehicle(car2, 0, 0);
 
-    it('Throws exception when not existing cell given', () => {
-        let cellOnNonExistingLane = new Cell(99, 99);
-        let nonExistingCell = new Cell(0, 99);
-        expect(() => { cellsMap.nextCellFor(cellOnNonExistingLane) }).toThrow();
-        expect(() => { cellsMap.nextCellFor(nonExistingCell) }).toThrow();
+        expect(cellsMap.nothingInFrontOf(car1, 2)).toBe(true);
+        expect(cellsMap.nothingInFrontOf(car2, distanceBetweenCar1And2 + 1)).toBe(false);
+        expect(cellsMap.nothingInFrontOf(car2, distanceBetweenCar1And2)).toBe(true);
     })
 });

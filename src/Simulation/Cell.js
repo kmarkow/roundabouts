@@ -21,6 +21,14 @@ class Cell {
     isTaken() {
         return this._taken;
     }
+
+    isEmpty() {
+        return !this._taken;
+    }
+
+    id() {
+        return this._cellId;
+    }
 }
 
 export default Cell;

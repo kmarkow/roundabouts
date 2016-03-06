@@ -3,6 +3,7 @@ import CellsDrawer from './GUI/CellsDrawer.js';
 import UnitConverter from './GUI/UnitConverter.js';
 import {roundaboutBukowe, roundaboutThreeLanes} from './RoundaboutSpecifications.js';
 import {CellsMap} from './Simulation/CellsMap.js';
+import CellularAutomata from './Simulation/CellularAutomata.js';
 
 let unitConverter = new UnitConverter(
     roundaboutBukowe.roundaboutDiameter() + ADHERENT_ROAD_LENGTH * 2,
@@ -37,9 +38,11 @@ let roundaboutCellsDrawer = new CellsDrawer(
     twojs
 );
 
+let cellularAutomata = new CellularAutomata(roundaboutBukoweCellsMap);
+
 roundaboutDrawer.draw();
 setInterval(() => {
-    roundaboutBukoweCellsMap.nextIteration();
-}, 500);
+    cellularAutomata.nextIteration();
+}, 1000);
 
 
