@@ -1,4 +1,8 @@
-import {range} from './JsWhyYouNoImplement.js';
+import {range} from '../../JsWhyYouNoImplement.js';
+import Lane from './Lane.js';
+import Direction from './Direction.js';
+import AdherentRoad from './AdherentRoad.js';
+import InnerRoad from './InnerRoad.js';
 
 class RoundaboutSpecification {
 
@@ -7,6 +11,20 @@ class RoundaboutSpecification {
         this._lanesCount = lanesCount;
         this._islandRadius = islandRadius;
         this._adherentRoadSpecification = adherentRoadSpecification;
+        this._adherentRoads = Array.from(Direction.allDirections(), direction => {
+            return AdherentRoad.newRoad(
+                direction,
+                this.adherentRoadLength(),
+                laneWidth,
+                adherentRoadSpecification.ingoingLanes,
+                adherentRoadSpecification.outgoingLanes
+            );
+        });
+        this._innerRoad = new InnerRoad(
+            Array.from(range(0, lanesCount), laneNumber => {
+                return new Lane(laneNumber, this.lengthOfLane(laneNumber), laneWidth, true)
+            })
+        );
     }
 
     roundaboutDiameter() {
@@ -22,12 +40,17 @@ class RoundaboutSpecification {
         return this._lanesCount;
     }
 
+    adherentRoadLength()
+    {
+        return 35; // 25 meters
+    }
+
     lanesWidth() {
-        return this.lanesCount() * this.laneWidth();
+        return this._innerRoad.lanesCount() * this.laneWidth();
     }
 
     lanesNumbers() {
-        return range(0, this.lanesCount());
+        return range(0, this._innerRoad.lanesCount());
     }
 
     laneWidth() {
@@ -45,7 +68,7 @@ class RoundaboutSpecification {
         );
     }
 
-    adherentRoadsCount() {
+    adherentLanesCount() {
         return this._adherentRoadSpecification.ingoingLanes + this._adherentRoadSpecification.outgoingLanes;
     }
 
@@ -60,13 +83,35 @@ class RoundaboutSpecification {
      * Radius is counted to center of the lane
      */
     laneRadius(laneNumber) {
-        if (laneNumber >= this.lanesCount()) {
+        if (laneNumber >= this._innerRoad.lanesCount()) {
             throw new Error("Incorrect lane number - 0 is the most inner, 1 is outer.");
         }
 
         return this.islandRadius() + this.laneWidth()*laneNumber + this.laneWidth()/2;
     }
+
+    allLanes() {
+        var allLanes = []
+        this._adherentRoads.forEach(adherentRoad => {
+            adherentRoad.allLanes().forEach(lane => {
+                allLanes.push(lane);
+            });
+        });
+        this._innerRoad.allLanes().forEach(lane => {
+            allLanes.push(lane)
+        });
+        return allLanes;
+    }
+
+    innerRoadLanes() {
+        return this._innerRoad.allLanes();
+    }
+
+    adherentRoads() {
+        return this._adherentRoads;
+    }
 }
+
 
 var roundaboutBukowe = new RoundaboutSpecification(
     4.5,

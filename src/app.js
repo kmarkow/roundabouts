@@ -1,12 +1,14 @@
-import {RoundaboutDrawer, ADHERENT_ROAD_LENGTH} from './GUI/RoundaboutDrawer.js';
+import {RoundaboutDrawer} from './GUI/RoundaboutDrawer.js';
 import CellsDrawer from './GUI/CellsDrawer.js';
+import Translator from './GUI/Translator.js';
 import UnitConverter from './GUI/UnitConverter.js';
-import {roundaboutBukowe, roundaboutThreeLanes} from './RoundaboutSpecifications.js';
+import {roundaboutBukowe, roundaboutThreeLanes} from './Simulation/Specification/RoundaboutSpecifications.js';
 import {CellsMap} from './Simulation/CellsMap.js';
 import CellularAutomata from './Simulation/CellularAutomata.js';
+import CellsNeighbours from './Simulation/CellsNeighbours.js';
 
 let unitConverter = new UnitConverter(
-    roundaboutBukowe.roundaboutDiameter() + ADHERENT_ROAD_LENGTH * 2,
+    roundaboutThreeLanes.roundaboutDiameter() + roundaboutThreeLanes.adherentRoadLength() * 2,
     Math.min(window.innerWidth, window.innerHeight)
 );
 
@@ -27,20 +29,29 @@ let roundaboutThreeLanesCellsMap = new CellsMap(
     unitConverter
 );
 
+var translator = new Translator(roundaboutBukowe, unitConverter, twojs);
+
 let roundaboutDrawer = new RoundaboutDrawer(
     roundaboutBukowe,
     unitConverter,
-    twojs
+    twojs,
+    translator
 );
 
 let roundaboutCellsDrawer = new CellsDrawer(
     roundaboutBukowe,
     roundaboutBukoweCellsMap,
     unitConverter,
-    twojs
+    twojs,
+    translator
 );
 
-let cellularAutomata = new CellularAutomata(roundaboutBukoweCellsMap);
+var cellsNeighbours = new CellsNeighbours(
+    roundaboutBukoweCellsMap.cellsCountOnLane(
+        roundaboutBukoweCellsMap.outerLaneNumber()
+    )
+);
+let cellularAutomata = new CellularAutomata(roundaboutBukoweCellsMap, cellsNeighbours);
 
 roundaboutDrawer.draw();
 setInterval(() => {

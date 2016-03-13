@@ -1,12 +1,14 @@
-import {RoundaboutDrawer, ADHERENT_ROAD_LENGTH} from '../../src/GUI/RoundaboutDrawer.js';
+import {RoundaboutDrawer} from '../../src/GUI/RoundaboutDrawer.js';
+import Translator from '../../src/GUI/Translator.js';
 import UnitConverter from '../../src/GUI/UnitConverter.js';
-import {roundaboutBukowe} from '../../src/RoundaboutSpecifications.js';
+import {roundaboutBukowe} from '../../src/Simulation/Specification/RoundaboutSpecifications.js';
 
 describe("When I start Application", function() {
 
     var roundaboutDrawer;
     var unitConverter;
     var canvasElement;
+    var translator;
 
     beforeEach(()=>{
         canvasElement = document.createElement("div");
@@ -16,13 +18,19 @@ describe("When I start Application", function() {
         }).appendTo(canvasElement);
 
         unitConverter  = new UnitConverter(
-            ADHERENT_ROAD_LENGTH,
+            roundaboutBukowe.adherentRoadLength(),
             800
+        );
+        translator = new Translator(
+            roundaboutBukowe,
+            unitConverter,
+            twojs
         );
         roundaboutDrawer = new RoundaboutDrawer(
             roundaboutBukowe,
             unitConverter,
-            twojs
+            twojs,
+            translator
         );
     });
 

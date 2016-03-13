@@ -1,8 +1,15 @@
-import {range} from '../JsWhyYouNoImplement.js';
 import Cell from './Cell.js';
 import CellsLane from './CellsLane.js';
 import Vehicle from './Vehicle.js';
 import Observable from './Observable.js';
+
+class ExitRoadEnd extends Error {
+    constructor(message) {
+        super(message);
+        this.message = message;
+        this.name = 'ExitRoadEnd';
+    }
+}
 
 class CellsMap extends Observable {
 
@@ -10,66 +17,69 @@ class CellsMap extends Observable {
         super();
         this._roundaboutSpecification = roundaboutSpecification;
         this._unitConverter = unitConverter;
-        this._laneCells = {};
-        this._cellsLane = {};
-        this._vehiclesOnCells = {};
+        this._lanes = {};
         this._divideLanesToCells();
     }
 
     _divideLanesToCells() {
-        this._roundaboutSpecification.lanesNumbers().forEach(laneNumber => {
-            this._laneCells[laneNumber] = [];
-            var cellsCount = this._unitConverter.metersAsCells(
-                this._roundaboutSpecification.lengthOfLane(laneNumber)
-            );
-            range(0, cellsCount).forEach(cellNumber => {
-                this._laneCells[laneNumber].push(
-                    new Cell(laneNumber, cellNumber)
-                );
-            });
-            this._cellsLane[laneNumber] = new CellsLane(this._laneCells[laneNumber]);
+        this._roundaboutSpecification.allLanes().forEach(lane => {
+            this._lanes[lane.id()] = CellsLane.newLane(lane.id(), this._unitConverter.metersAsCells(lane.length()), lane.isRounded());
         });
     }
 
     cellsOnLane(laneNumber) {
-        return this._laneCells[laneNumber];
+        return this._lanes[laneNumber].allCells();
+    }
+
+    cellsCountOnLane(laneNumber) {
+        return this._lanes[laneNumber].allCells().length;
+    }
+
+    outerLaneNumber() {
+        return this._roundaboutSpecification.lanesCount() - 1;
     }
 
     moveVehicleBy(vehicle, cellsToMove) {
-        var oldVehicleCells = this._vehiclesOnCells[vehicle.id()];
-        var oldVehicleFrontCell = oldVehicleCells[0];
-        if (!oldVehicleFrontCell) {
-            throw Error("Vehicle not added");
+        if (cellsToMove == 0) {
+            return;
         }
-        var newVehicleFrontCell = this._cellsLane[oldVehicleFrontCell.parentLane()].cellsNextTo(oldVehicleFrontCell, cellsToMove).slice(-1)[0];
-        var newVehicleCells = this._cellsLane[newVehicleFrontCell.parentLane()].cellsPreviousTo(newVehicleFrontCell, vehicle.lengthCells());
-        oldVehicleCells.forEach(cell => {
-            cell.setTaken(false);
-        })
-        newVehicleCells.forEach(cell => {
-            cell.setTaken(true);
-        });
-
-        this._vehiclesOnCells[vehicle.id()] = newVehicleCells;
+        var nextCells = vehicle.frontCell().parentLane().cellsNextTo(vehicle.frontCell(), cellsToMove);
+        if (nextCells.length < cellsToMove && vehicle.frontCell().parentLane().isExitLane()) {
+            throw new ExitRoadEnd("End of exit road");
+        }
+        var newVehicleFrontCell = nextCells.slice(-1)[0];
+        var newVehicleCells = newVehicleFrontCell.parentLane().cellsPreviousToInclusive(newVehicleFrontCell, vehicle.lengthCells());
+        var oldVehicleCells = vehicle.currentCells();
+        if (newVehicleCells.length != oldVehicleCells.length) {
+            //TODO: Hardcoded 2 for truck
+            newVehicleCells = newVehicleCells.concat(oldVehicleCells.slice(2, 2 + oldVehicleCells.length - newVehicleCells.length));
+        }
+        vehicle.moveToCells(newVehicleCells);
     }
 
     addVehicle(vehicle, lane=0, cell=0) {
         var firstCell = this.cellsOnLane(lane)[cell];
         var vehicleCells = [firstCell];
-        vehicleCells = vehicleCells.concat(this._cellsLane[lane].cellsPreviousTo(firstCell, vehicle.lengthCells()-1));
-        this._vehiclesOnCells[vehicle.id()] = vehicleCells;
-        vehicleCells.forEach(cell => {
-            cell.setTaken(true);
-        });
+        vehicleCells = vehicleCells.concat(firstCell.parentLane().cellsPreviousTo(firstCell, vehicle.lengthCells()-1));
+        vehicle.moveToCells(vehicleCells);
     }
 
     nothingInFrontOf(vehicle, numberOfCellsToCheck) {
-        var vehiclesFirstCell = this._vehiclesOnCells[vehicle.id()][0];
-        var nextCells = this._cellsLane[vehiclesFirstCell.parentLane()].cellsNextTo(vehiclesFirstCell, numberOfCellsToCheck);
+        var nextCells = vehicle.frontCell().parentLane().cellsNextTo(vehicle.frontCell(), numberOfCellsToCheck);
         return nextCells.every(cell => {
             return cell.isEmpty()
         });
     }
+
+    takeExit(vehicle) {
+        var oldVehicleCells = vehicle.currentCells();
+        var sliceFrom = Math.max(0, vehicle.currentSpeed() - vehicle.lengthCells());
+        var sliceTo = vehicle.currentSpeed();
+        //TODO: Hardcoded EXIT_1
+        var newVehicleCells = this._lanes[vehicle.destinationExit() + "_EXIT_1"].allCells().slice(sliceFrom, sliceTo).reverse();
+        var newVehicleCells = newVehicleCells.concat(oldVehicleCells.slice(0, oldVehicleCells.length - newVehicleCells.length));
+        vehicle.moveToCells(newVehicleCells);
+    }
 }
 
-export { CellsMap };
+export { CellsMap, ExitRoadEnd };

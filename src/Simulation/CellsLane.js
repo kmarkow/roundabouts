@@ -1,33 +1,64 @@
-class CellsLane {
-    constructor(cells) {
-       this._cellsIdsToCells = {};
-       this._cellsIds = [];
-       cells.forEach(cell => {
-           this._cellsIdsToCells[cell.id()] = cell;
-           this._cellsIds.push(cell.id());
-       });
+import {range} from '../JsWhyYouNoImplement.js';
+import Cell from './Cell.js';
 
-       this._cellsIdsReversed = this._cellsIds.slice().reverse();
+class CellsLane {
+    static newLane(laneId, lengthCells, isRounded=true) {
+        var cells = [];
+        range(0, lengthCells).forEach(cellNumber => {
+            cells.push(new Cell(cellNumber));
+        });
+        return new CellsLane(laneId, cells, isRounded);
+    }
+
+    constructor(id, cells, isRounded) {
+       cells.forEach(cell => {
+          cell.assignToLane(this);
+       });
+       this._id = id;
+       this._allCells = cells;
+       this._allCellsReversed = this._allCells.slice().reverse();
+       this._isRounded = isRounded;
+    }
+
+    id() {
+        return this._id;
     }
 
     cellsNextTo(cell, limitTo) {
-        return this._cellsNextTo(cell, limitTo, this._cellsIds);
+        return this._cellsNextTo(cell, limitTo, this._allCells);
     }
 
     cellsPreviousTo(cell, limitTo) {
-        return this._cellsNextTo(cell, limitTo, this._cellsIdsReversed);
+        return this._cellsNextTo(cell, limitTo, this._allCellsReversed);
+    }
+
+    cellsPreviousToInclusive(cell, limitTo) {
+        return [cell].concat(this._cellsNextTo(cell, limitTo-1, this._allCellsReversed));
+    }
+
+    allCells() {
+        return this._allCells;
     }
 
     _cellsNextTo(cell, limitTo, arrayFrom) {
-        var nextCellId = arrayFrom.indexOf(cell.id()) + 1;
-        var nextCellsIds = arrayFrom.slice(nextCellId, nextCellId+limitTo);
-        var missingCells = limitTo - nextCellsIds.length;
-        nextCellsIds = nextCellsIds.concat(arrayFrom.slice(0, missingCells));
-        var nextCells = [];
-        nextCellsIds.forEach(nextCellId => {
-            nextCells.push(this._cellsIdsToCells[nextCellId]);
+        var cellIndex = arrayFrom.findIndex(element => {
+            return element.equals(cell);
         });
+        if (cellIndex == -1) {
+            throw new Error("Cell not found ", cell.id());
+        }
+        var nextCellIndex = cellIndex + 1;
+        var nextCells = arrayFrom.slice(nextCellIndex, nextCellIndex + limitTo);
+        var missingCells = limitTo - nextCells.length;
+
+        if (this._isRounded && missingCells) {
+            nextCells = nextCells.concat(arrayFrom.slice(0, missingCells));
+        }
         return nextCells;
+    }
+
+    isExitLane() {
+        return !this._isRounded; //TODO: Take care of entrances also
     }
 }
 

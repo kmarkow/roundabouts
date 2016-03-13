@@ -1,17 +1,46 @@
 
 class Vehicle {
 
-    constructor(lengthCells, maxSpeed) {
+    constructor(lengthCells, maxSpeed, maxSpeedWhenTurning) {
         this._lengthCells = lengthCells;
         this._currentSpeed = 1;
         this._maxSpeed = maxSpeed;
-        this._id = Math.round(Math.random()*1000000);
+        this._id = Math.round(Math.random()*16777215);
+        this._currentCells = [];
+        this._maxSpeedWhenTurning = maxSpeedWhenTurning;
     }
 
-    moveToNextIteration(cellsMap) {
-        if (cellsMap.nothingInFrontOf(this, this._currentSpeed)) {
+    maxSpeedWhenTurning() {
+        return this._maxSpeedWhenTurning;
+    }
+
+    setDestinationExit(destinationExit) {
+        this._destinationExit = destinationExit;
+    }
+
+    destinationExit() {
+        return this._destinationExit;
+    }
+
+    currentSpeed() {
+        return this._currentSpeed;
+    }
+
+    moveToNextIteration(cellsMap, cellsNeighbours) {
+        if(cellsNeighbours.canTakeExit(this)) {
+            cellsMap.takeExit(this);
+            return;
+        }
+
+        if (cellsNeighbours.isApproachingExit(this)) {
+            this._breakBy(1);
+            cellsMap.moveVehicleBy(this, this._currentSpeed);
+            return;
+        }
+
+        if (cellsMap.nothingInFrontOf(this, this._currentSpeed+1)) {
             if (!this._isMovingWithMaxSpeed()) {
-                this._accelerate()
+                this._accelerate();
             }
         } else {
             var breakUpTo = this._distanceFromPrecedingVehicle(cellsMap);
@@ -19,6 +48,34 @@ class Vehicle {
         }
 
         cellsMap.moveVehicleBy(this, this._currentSpeed);
+    }
+
+    remove() {
+        this._currentCells.forEach(cell => {
+            cell.setVehicle(null);
+        });
+        this._currentCells = [];
+    }
+
+    moveToCells(cells) {
+        if (cells.length != this.lengthCells()) {
+            throw new Error("Vehicle received invalid directions!");
+        }
+        this._currentCells.forEach(cell => {
+            cell.setVehicle(null);
+        });
+        cells.forEach(cell => {
+           cell.setVehicle(this);
+        });
+        this._currentCells = cells;
+    }
+
+    currentCells() {
+        return this._currentCells;
+    }
+
+    frontCell() {
+        return this.currentCells()[0];
     }
 
     lengthCells() {
@@ -43,36 +100,18 @@ class Vehicle {
         this._currentSpeed = to;
     }
 
+    _breakBy(by) {
+        if (this._currentSpeed - by > 0) {
+            this._currentSpeed -= by;
+        }
+    }
+
     _distanceFromPrecedingVehicle(cellsMap) {
         var distanceNotEmpty = this._currentSpeed;
         while (!cellsMap.nothingInFrontOf(this, distanceNotEmpty)) {
             distanceNotEmpty--;
         }
         return distanceNotEmpty;
-    }
-
-    static newCar() {
-        return new Vehicle(2, 5);
-    }
-
-    static newMotorcycle() {
-        return new Vehicle(1, 5);
-    }
-
-    static newVan() {
-        return new Vehicle(3, 5);
-    }
-
-    static newMiniBus() {
-        return new Vehicle(4, 3);
-    }
-
-    static newBus() {
-        return new Vehicle(5, 2);
-    }
-
-    static newTruck() {
-        return new Vehicle(5, 2);
     }
 }
 
