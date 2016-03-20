@@ -32,14 +32,8 @@ class Vehicle {
             return;
         }
 
-        if (cellsNeighbours.isApproachingExit(this)) {
-            this._breakBy(1);
-            cellsMap.moveVehicleBy(this, this._currentSpeed);
-            return;
-        }
-
         if (cellsMap.nothingInFrontOf(this, this._currentSpeed+1)) {
-            if (!this._isMovingWithMaxSpeed()) {
+            if (!this._isMovingWithMaxSpeed() && !this._isApproachingExit(cellsNeighbours)) {
                 this._accelerate();
             }
         } else {
@@ -47,6 +41,11 @@ class Vehicle {
             this._break(breakUpTo);
         }
 
+        if (this._isApproachingExit(cellsNeighbours)) {
+            if (this.currentSpeed() > this.maxSpeedWhenTurning()) {
+                this._breakBy(1);
+            }
+        }
         cellsMap.moveVehicleBy(this, this._currentSpeed);
     }
 
@@ -112,6 +111,11 @@ class Vehicle {
             distanceNotEmpty--;
         }
         return distanceNotEmpty;
+    }
+
+    _isApproachingExit(cellsNeighbours) {
+        return cellsNeighbours.isApproachingExit(this) && !this.frontCell().parentLane().isExitLane();
+
     }
 }
 

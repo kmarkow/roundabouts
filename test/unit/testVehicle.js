@@ -18,12 +18,4 @@ describe("Vehicles", function() {
         expect(newBus).not.toBe(null);
         expect(newTruck).not.toBe(null);
     });
-
-    //TODO: Add test new breaking when approaching to exit
-    //Check in model's documentation
-
-    it('will slow down when approaching exit', () => {
-        var car = VehicleFactory.newCar();
-        car.setDestinationExit('N');
-    });
 });

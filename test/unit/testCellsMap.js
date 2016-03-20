@@ -34,13 +34,6 @@ describe("Test roundabout cells map", function() {
         expect(cellsMap.nothingInFrontOf(car2, distanceBetweenCar1And2)).toBe(true);
     });
 
-    it('cars will slow down before their exits', () => {
-        //TODO: Test that a car will start slowing down on appropiate time so it can take exit
-        // i.e. if car going with speed 5 and exit at 16 must start slowing down at -2
-        // if car going with speed 2 must start slowing down at -2
-    });
-
-
     it('Lets a truck take an exit', () => {
         var iterations = [
             [
@@ -144,20 +137,28 @@ describe("Test roundabout cells map", function() {
                 {laneId: 1, cellNumber: 13},
             ],
             [
-                {laneId: 1, cellNumber: 17},
                 {laneId: 1, cellNumber: 16},
+                {laneId: 1, cellNumber: 15},
             ],
             [
-                {laneId: 'N_EXIT_1', cellNumber: 2},
+                {laneId: 1, cellNumber: 18},
+                {laneId: 1, cellNumber: 17},
+            ],
+            [
                 {laneId: 'N_EXIT_1', cellNumber: 1},
+                {laneId: 'N_EXIT_1', cellNumber: 0},
             ],
             [
-                {laneId: 'N_EXIT_1', cellNumber: 6},
-                {laneId: 'N_EXIT_1', cellNumber: 5},
+                {laneId: 'N_EXIT_1', cellNumber: 4},
+                {laneId: 'N_EXIT_1', cellNumber: 3},
             ],
             [
-                {laneId: 'N_EXIT_1', cellNumber: 11},
-                {laneId: 'N_EXIT_1', cellNumber: 10},
+                {laneId: 'N_EXIT_1', cellNumber: 8},
+                {laneId: 'N_EXIT_1', cellNumber: 7},
+            ],
+            [
+                {laneId: 'N_EXIT_1', cellNumber: 13},
+                {laneId: 'N_EXIT_1', cellNumber: 12},
             ]
         ];
 
@@ -190,6 +191,21 @@ describe("Test roundabout cells map", function() {
 
         range(0, 22).forEach(i => {
             expect(() => {nextIteration();}).not.toThrow();
+        });
+    });
+
+
+    it('will slow down when approaching exit', () => {
+        var expectedSpeeds = [
+          2, 3, 4, 4, 3, 2, 2
+        ];
+        var car = VehicleFactory.newCar();
+        car.setDestinationExit('N');
+        cellsMap.addVehicle(car, 1, 79);
+
+        expectedSpeeds.forEach(expectedSpeed => {
+            car.moveToNextIteration(cellsMap, cellsNeighbours);
+            expect(car.currentSpeed()).toEqual(expectedSpeed);
         });
     });
 

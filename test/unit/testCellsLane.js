@@ -30,7 +30,7 @@ describe("Cells Lane", function() {
         expect(cellsLane.cellsPreviousTo(cell3, 2)).toEqual([cell2, cell1]);
     });
 
-    it('throws when normal lane ends', () => {
+    it('returs less cells when normal road ends', () => {
         var cell1 = new Cell(0);
         var cell2 = new Cell(1);
         var cell3 = new Cell(2);
@@ -39,8 +39,10 @@ describe("Cells Lane", function() {
         var cellsLane = new CellsLane("dummyId", [cell1, cell2, cell3, cell4], false);
 
         //TODO: Przemyslec zmiane tego moze powinna przyjmowac parametr z ewentualna droga do uzupelnienia?
-        //expect(() => cellsLane.cellsNextTo(cell3, 2)).toThrow();
-        //expect(() => cellsLane.cellsPreviousTo(cell1, 2)).toThrow();
+        expect(cellsLane.cellsNextTo(cell3, 2)).toEqual([cell4]);
+        expect(cellsLane.cellsNextTo(cell4, 2)).toEqual([]);
+        expect(cellsLane.cellsPreviousTo(cell1, 2)).toEqual([]);
+        expect(cellsLane.cellsPreviousTo(cell2, 2)).toEqual([cell1]);
     });
 
     it('can be created with factory method', () => {
