@@ -47,9 +47,7 @@ let roundaboutCellsDrawer = new CellsDrawer(
 );
 
 var cellsNeighbours = new CellsNeighbours(
-    roundaboutBukoweCellsMap.cellsCountOnLane(
-        roundaboutBukoweCellsMap.outerLaneNumber()
-    )
+    roundaboutBukoweCellsMap.cellsCountsOnInnerRoadLanes()
 );
 let cellularAutomata = new CellularAutomata(roundaboutBukoweCellsMap, cellsNeighbours);
 

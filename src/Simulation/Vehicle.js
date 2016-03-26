@@ -31,6 +31,10 @@ class Vehicle {
         return this._currentSpeed;
     }
 
+    currentLaneId() {
+        return this.frontCell().parentLane().id();
+    }
+
     setDestinationExitLaneId(destinationExitLaneId) {
         this._destinationExitLaneId = destinationExitLaneId;
     }

@@ -17,26 +17,35 @@ class CellsMap extends Observable {
         super();
         this._roundaboutSpecification = roundaboutSpecification;
         this._unitConverter = unitConverter;
-        this._lanes = {};
+        this._lanes = new Map();
         this._divideLanesToCells();
     }
 
     _divideLanesToCells() {
         this._roundaboutSpecification.allLanes().forEach(lane => {
-            this._lanes[lane.id()] = CellsLane.newLane(lane.id(), this._unitConverter.metersAsCells(lane.length()), lane.isRounded());
+            this._lanes.set(
+                lane.id(),
+                CellsLane.newLane(lane.id(), this._unitConverter.metersAsCells(lane.length()), lane.isRounded())
+            );
         });
     }
 
+    _innerRoadLanes() {
+        return Array.from(this._lanes.values(), lane => {
+            if (lane.isRoundaboutLane()) {
+                return lane;
+            }
+        }).filter(element => {return element !== undefined;});
+    }
+
     cellsOnLane(laneNumber) {
-        return this._lanes[laneNumber].allCells();
+        return this._lanes.get(laneNumber).allCells();
     }
 
-    cellsCountOnLane(laneNumber) {
-        return this._lanes[laneNumber].allCells().length;
-    }
-
-    outerLaneNumber() {
-        return this._roundaboutSpecification.lanesCount() - 1;
+    cellsCountsOnInnerRoadLanes() {
+        return Array.from(this._innerRoadLanes(), lane => {
+            return lane.allCells().length;
+        });
     }
 
     moveVehicleBy(vehicle, cellsToMove) {
@@ -75,7 +84,9 @@ class CellsMap extends Observable {
         var oldVehicleCells = vehicle.currentCells();
         var sliceFrom = Math.max(0, vehicle.currentSpeed() - vehicle.lengthCells());
         var sliceTo = vehicle.currentSpeed();
-        var newVehicleCells = this._lanes[vehicle.destinationExit() + "_EXIT_" + vehicle.destinationExitLaneId().toString()].allCells().slice(sliceFrom, sliceTo).reverse();
+        var newVehicleCells = this._lanes.get(
+            vehicle.destinationExit() + "_EXIT_" + vehicle.destinationExitLaneId().toString()
+        ).allCells().slice(sliceFrom, sliceTo).reverse();
         var newVehicleCells = newVehicleCells.concat(oldVehicleCells.slice(0, oldVehicleCells.length - newVehicleCells.length));
         vehicle.moveToCells(newVehicleCells);
     }

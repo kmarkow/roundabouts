@@ -15,11 +15,12 @@ describe("Cells Neighbours", function() {
             {"destinationRoadId": "S", "frontCellId": 50},
             {"destinationRoadId": "E", "frontCellId": 70},
         ];
-        var cellsNeighbours = new CellsNeighbours(80);
+        var cellsNeighbours = new CellsNeighbours([70, 80]);
         carsParameters.forEach(carParamerers => {
             var car = VehicleFactory.newCar();
             spyOn(car, "currentSpeed").and.returnValue(5);
             spyOn(car, "frontCell").and.returnValue(new Cell(carParamerers.frontCellId));
+            spyOn(car, "currentLaneId").and.returnValue(1);
             car.setDestinationExit(carParamerers.destinationRoadId);
             car.setDestinationExitLaneId(0);
             expect(cellsNeighbours.isApproachingExit(car)).toBe(true);
@@ -33,11 +34,12 @@ describe("Cells Neighbours", function() {
             {"destinationRoadId": "S", "frontCellId": 54},
             {"destinationRoadId": "E", "frontCellId": 76},
         ];
-        var cellsNeighbours = new CellsNeighbours(90);
+        var cellsNeighbours = new CellsNeighbours([70, 80, 90]);
         carsParameters.forEach(carParamerers => {
             var car = VehicleFactory.newCar();
             spyOn(car, "currentSpeed").and.returnValue(5);
             spyOn(car, "frontCell").and.returnValue(new Cell(carParamerers.frontCellId));
+            spyOn(car, "currentLaneId").and.returnValue(2);
             car.setDestinationExit(carParamerers.destinationRoadId);
             car.setDestinationExitLaneId(0);
             expect(cellsNeighbours.isApproachingExit(car)).toBe(true);
@@ -51,11 +53,12 @@ describe("Cells Neighbours", function() {
             {"destinationRoadId": "S", "frontCellId": 24},
             {"destinationRoadId": "E", "frontCellId": 26},
         ];
-        var cellsNeighbours = new CellsNeighbours(90);
+        var cellsNeighbours = new CellsNeighbours([70, 80, 90]);
         carsParameters.forEach(carParamerers => {
             var car = VehicleFactory.newCar();
             spyOn(car, "currentSpeed").and.returnValue(5);
             spyOn(car, "frontCell").and.returnValue(new Cell(carParamerers.frontCellId));
+            spyOn(car, "currentLaneId").and.returnValue(2);
             car.setDestinationExit(carParamerers.destinationRoadId);
             car.setDestinationExitLaneId(0);
             expect(cellsNeighbours.isApproachingExit(car)).toBe(false);
@@ -64,7 +67,7 @@ describe("Cells Neighbours", function() {
 
     it('accurately says when can take exit', () => {
         var outerCellsLane = CellsLane.newLane(1, 80);
-        var cellsNeighbours = new CellsNeighbours(80);
+        var cellsNeighbours = new CellsNeighbours([70, 80]);
         var car1 = VehicleFactory.newCar();
         car1.setDestinationExit('N');
         car1.setDestinationExitLaneId(0);
@@ -76,6 +79,7 @@ describe("Cells Neighbours", function() {
         vehicleCells.reverse();
         spyOn(car1, "currentCells").and.returnValue(vehicleCells);
         spyOn(car1, "frontCell").and.returnValue(vehicleCells[0]);
+        spyOn(car1, "currentLaneId").and.returnValue(1);
 
         expect(cellsNeighbours.canTakeExit(car1)).toBe(true);
     });

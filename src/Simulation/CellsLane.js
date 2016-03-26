@@ -60,6 +60,10 @@ class CellsLane {
     isExitLane() {
         return !this._isRounded; //TODO: Take care of entrances also
     }
+
+    isRoundaboutLane() {
+        return this._isRounded;
+    }
 }
 
 export default CellsLane;

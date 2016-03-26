@@ -18,7 +18,7 @@ describe("Test roundabout cells map", function() {
             800
         );
         cellsMap = new CellsMap(roundaboutBukowe, unitConverter);
-        cellsNeighbours = new CellsNeighbours(80);
+        cellsNeighbours = new CellsNeighbours([70, 80]);
     });
 
     it('Accurately says if there is nothing in front of a vehicle', () => {
@@ -212,6 +212,10 @@ describe("Test roundabout cells map", function() {
             car.moveToNextIteration(cellsMap, cellsNeighbours);
             expect(car.currentSpeed()).toEqual(expectedSpeed);
         });
+    });
+
+    it('returns cells count on lanes', () => {
+        expect(cellsMap.cellsCountsOnInnerRoadLanes()).toEqual([70, 81]);
     });
 
     function expectCellsToEqual(firstCells, secondCells) {
