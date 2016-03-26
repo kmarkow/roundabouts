@@ -7,9 +7,13 @@ import Direction from './Specification/Direction.js';
 class CellularAutomata {
 
     constructor(cellsMap, cellsNeighbours) {
+        this._cellsMap = cellsMap;
+        this._cellsNeighbours = cellsNeighbours;
         var randomNumberGenerator = new RandomNumberGenerator();
-
         this._vehicles = [
+            VehicleFactory.newCar(),
+            VehicleFactory.newCar(),
+            VehicleFactory.newCar(),
             VehicleFactory.newCar(),
             VehicleFactory.newCar(),
             VehicleFactory.newCar(),
@@ -21,17 +25,15 @@ class CellularAutomata {
            vehicle.setDestinationExit(Direction.newNorth());
            vehicle.setDestinationExitLaneId(randomNumberGenerator.intFromTo(0, 1));
         });
-        this._vehicles[0].setDestinationExitLaneId(1);
-        this._vehicles[1].setDestinationExitLaneId(1);
-
-        this._cellsMap = cellsMap;
-        this._cellsMap.addVehicle(this._vehicles[0], 0, randomNumberGenerator.intFromTo(0, 69));
-        this._cellsMap.addVehicle(this._vehicles[1], 0, randomNumberGenerator.intFromTo(0, 69));
-        this._cellsMap.addVehicle(this._vehicles[2], 1, randomNumberGenerator.intFromTo(0, 69));
-        this._cellsMap.addVehicle(this._vehicles[3], 1, randomNumberGenerator.intFromTo(0, 69));
-        this._cellsMap.addVehicle(this._vehicles[4], 1, randomNumberGenerator.intFromTo(0, 69));
-        this._cellsMap.addVehicle(this._vehicles[5], 1, randomNumberGenerator.intFromTo(0, 69));
-        this._cellsNeighbours = cellsNeighbours;
+        this._vehicles.forEach(vehicle => {
+            var laneId = randomNumberGenerator.intFromTo(0, 1);
+            var exitLaneId = randomNumberGenerator.intFromTo(0, 1);
+            if (laneId == 0) {
+                exitLaneId = 1;
+            }
+            vehicle.setDestinationExitLaneId(exitLaneId);
+            this._cellsMap.addVehicle(vehicle, laneId, randomNumberGenerator.intFromTo(0, 69));
+        });
     }
 
     nextIteration() {

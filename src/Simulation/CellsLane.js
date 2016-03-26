@@ -40,6 +40,10 @@ class CellsLane {
         return this._allCells;
     }
 
+    firstCells(numberOfCells) {
+        return this._allCells.slice(0, numberOfCells);
+    }
+
     _cellsNextTo(cell, limitTo, arrayFrom) {
         var cellIndex = arrayFrom.findIndex(element => {
             return element.equals(cell);

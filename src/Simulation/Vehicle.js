@@ -41,11 +41,26 @@ class Vehicle {
     }
 
     moveToNextIteration(cellsMap, cellsNeighbours) {
-        if(cellsNeighbours.canTakeExit(this)) {
+        //Taking exit
+        if(cellsNeighbours.approachedExit(this)) {
+            if (!cellsMap.exitLaneEmpty(this, this._currentSpeed)) {
+                this._stop();
+                return;
+            }
+            var vehicleOnTheRight = cellsMap.vehicleOnTheRight(this);
+            // TODO: && this._drivingRules.shouldYieldTo(this, vehicleOnTheRight)) { Check if vehicle on right is taking left lane or going straight
+            if (vehicleOnTheRight ) {
+                this._stop();
+            } else {
+                if (this._hasStopped()) {
+                    this._accelerate(this.maxSpeedWhenTurning());
+                }
             cellsMap.takeExit(this);
+            }
             return;
         }
 
+        //Going around roundabout
         if (cellsMap.nothingInFrontOf(this, this._currentSpeed+1)) {
             if (!this._isMovingWithMaxSpeed() && !this._isApproachingExit(cellsNeighbours)) {
                 this._accelerate();
@@ -103,9 +118,11 @@ class Vehicle {
         return this._currentSpeed == this._maxSpeed;
     }
 
-    _accelerate() {
-        if (this._currentSpeed < this._maxSpeed) {
-            this._currentSpeed++;
+    _accelerate(by=1) {
+        if (this._currentSpeed+by < this._maxSpeed) {
+            this._currentSpeed+=by;
+        } else {
+            this._currentSpeed = this._maxSpeed;
         }
     }
 
@@ -117,6 +134,14 @@ class Vehicle {
         if (this._currentSpeed - by > 0) {
             this._currentSpeed -= by;
         }
+    }
+
+    _stop() {
+        this._break(0);
+    }
+
+    _hasStopped() {
+        return this._currentSpeed == 0;
     }
 
     _distanceFromPrecedingVehicle(cellsMap) {

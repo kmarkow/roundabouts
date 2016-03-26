@@ -110,6 +110,19 @@ class RoundaboutSpecification {
     adherentRoads() {
         return this._adherentRoads;
     }
+
+    laneIdToTheRightOf(laneId) {
+        if (this.lanesCount() == 2 && laneId == 0) {
+            return 1;
+        }
+        if (this.lanesCount() == 3 && laneId == 0) {
+            return 1;
+        }
+        if (this.lanesCount() == 3 && laneId == 1) {
+            return 2;
+        }
+        return null;
+    }
 }
 
 

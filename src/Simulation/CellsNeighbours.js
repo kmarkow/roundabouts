@@ -34,7 +34,7 @@ class CellsNeighbours  {
         return false;
     }
 
-    canTakeExit(vehicle) {
+    approachedExit(vehicle) {
         var destinationExitCellId = this._destinationExitCellIdFor(vehicle);
         if (destinationExitCellId == null) {
             return false;

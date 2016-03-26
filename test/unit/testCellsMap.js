@@ -199,7 +199,6 @@ describe("Test roundabout cells map", function() {
         });
     });
 
-
     it('will slow down when approaching exit', () => {
         var expectedSpeeds = [
           2, 3, 4, 4, 3, 2, 2
@@ -219,11 +218,54 @@ describe("Test roundabout cells map", function() {
         expect(cellsMap.cellsCountsOnInnerRoadLanes()).toEqual([70, 81]);
     });
 
+    it('checks if a car is in right mirror before leaving roundabout', () => {
+        var car = VehicleFactory.newCar();
+        car.setDestinationExit(Direction.newNorth());
+        car.setDestinationExitLaneId(1);
+        cellsMap.addVehicle(car, 1, 16);
+
+        var car2 = VehicleFactory.newCar();
+        car2.setDestinationExit(Direction.newNorth());
+        car2.setDestinationExitLaneId(1);
+        cellsMap.addVehicle(car2, 0, 14);
+
+        var cars = [car, car2];
+        function nextIteration(cars) {
+            cars.forEach(car => {
+                car.moveToNextIteration(cellsMap, cellsNeighbours);
+            });
+        }
+        nextIteration(cars);
+        expect(car.frontCell().id()).toEqual('118');
+        expect(car2.frontCell().id()).toEqual('016');
+
+        nextIteration(cars);
+        expect(car.frontCell().id()).toEqual('N_EXIT_11');
+        expect(car2.frontCell().id()).toEqual('016');
+
+        nextIteration(cars);
+        expect(car.frontCell().id()).toEqual('N_EXIT_14');
+        expect(car2.frontCell().id()).toEqual('N_EXIT_11');
+    });
+
+    it('find vehicle on the right', () => {
+        var car = VehicleFactory.newCar();
+        car.setDestinationExit(Direction.newNorth());
+        car.setDestinationExitLaneId(1);
+        cellsMap.addVehicle(car, 1, 16);
+
+        var car2 = VehicleFactory.newCar();
+        car2.setDestinationExit(Direction.newNorth());
+        car2.setDestinationExitLaneId(1);
+        cellsMap.addVehicle(car2, 0, 14);
+
+        expect(cellsMap.vehicleOnTheRight(car2)).toBe(car);
+    });
+
     function expectCellsToEqual(firstCells, secondCells) {
         firstCells.forEach((firstCell, index) => {
-                expect(firstCell.equals(secondCells[index])).toBe(true);
-            }
-        )
+            expect(firstCell.equals(secondCells[index])).toBe(true);
+        });
         expect(firstCells.length).toEqual(secondCells.length);
     }
 

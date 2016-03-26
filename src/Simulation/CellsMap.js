@@ -80,6 +80,38 @@ class CellsMap extends Observable {
         });
     }
 
+    exitLaneEmpty(vehicle, numberOfCellsToCheck) {
+        var exitLaneId = vehicle.destinationExit() + "_EXIT_" + vehicle.destinationExitLaneId().toString();
+        var exitLane = this._lanes.get(exitLaneId);
+        var exitLaneFirstCells = exitLane.firstCells(numberOfCellsToCheck);
+        return exitLaneFirstCells.every(cell => {
+            return cell.isEmpty() || cell.vehicle() == vehicle
+        });
+    }
+
+    vehicleOnTheRight(vehicle) {
+        var laneIdOnTheRight = this._roundaboutSpecification.laneIdToTheRightOf(vehicle.currentLaneId());
+        if (laneIdOnTheRight == null) {
+            return null;
+        }
+        var laneOnTheRight = this._lanes.get(laneIdOnTheRight);
+        var cellOnTheRightId = vehicle.frontCell().number() + 3;
+        var cellOnTheRight = laneOnTheRight.allCells()[cellOnTheRightId];
+        var cellsOnTheRight = laneOnTheRight.cellsPreviousToInclusive(cellOnTheRight, 4);
+
+        var cellWithAVehicle = cellsOnTheRight.find(cell => {
+            if (cell.vehicle()) {
+                return true;
+            }
+            return false;
+        });
+        if (cellWithAVehicle) {
+            return cellWithAVehicle.vehicle();
+        }
+
+        return null;
+    }
+
     takeExit(vehicle) {
         var oldVehicleCells = vehicle.currentCells();
         var sliceFrom = Math.max(0, vehicle.currentSpeed() - vehicle.lengthCells());

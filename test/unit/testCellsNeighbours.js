@@ -82,6 +82,6 @@ describe("Cells Neighbours", function() {
         spyOn(car1, "frontCell").and.returnValue(vehicleCells[0]);
         spyOn(car1, "currentLaneId").and.returnValue(1);
 
-        expect(cellsNeighbours.canTakeExit(car1)).toBe(true);
+        expect(cellsNeighbours.approachedExit(car1)).toBe(true);
     });
 });
