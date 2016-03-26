@@ -1,37 +1,36 @@
 import Vehicle from './Vehicle.js';
 import VehicleFactory from './VehicleFactory.js';
 import {ExitRoadEnd} from './CellsMap.js';
+import RandomNumberGenerator from './RandomNumberGenerator.js';
+import Direction from './Specification/Direction.js';
 
 class CellularAutomata {
 
     constructor(cellsMap, cellsNeighbours) {
-        var car1 = VehicleFactory.newCar();
-        car1.setDestinationExit('N');
-        var car2 = VehicleFactory.newCar();
-        car2.setDestinationExit('N');
-        var car3 = VehicleFactory.newCar();
-        car3.setDestinationExit('N');
-        var car4 = VehicleFactory.newCar();
-        car4.setDestinationExit('N');
-        var van = VehicleFactory.newVan();
-        van.setDestinationExit('N');
-        var truck = VehicleFactory.newTruck();
-        truck.setDestinationExit('N');
+        var randomNumberGenerator = new RandomNumberGenerator();
+
         this._vehicles = [
-            car1,
-            car2,
-            car3,
-            car4,
-            truck,
-            van
+            VehicleFactory.newCar(),
+            VehicleFactory.newCar(),
+            VehicleFactory.newCar(),
+            VehicleFactory.newCar(),
+            VehicleFactory.newVan(),
+            VehicleFactory.newTruck()
         ];
+        this._vehicles.forEach(vehicle => {
+           vehicle.setDestinationExit(Direction.newNorth());
+           vehicle.setDestinationExitLaneId(randomNumberGenerator.intFromTo(0, 1));
+        });
+        this._vehicles[0].setDestinationExitLaneId(1);
+        this._vehicles[1].setDestinationExitLaneId(1);
+
         this._cellsMap = cellsMap;
-        this._cellsMap.addVehicle(car1, 1, 0);
-        this._cellsMap.addVehicle(car2, 1, Math.floor((Math.random() * 69) + 1));
-        this._cellsMap.addVehicle(car3, 1, Math.floor((Math.random() * 69) + 1));
-        this._cellsMap.addVehicle(car4, 1, Math.floor((Math.random() * 69) + 1));
-        this._cellsMap.addVehicle(van, 1, Math.floor((Math.random() * 69) + 1));
-        this._cellsMap.addVehicle(truck, 1, Math.floor((Math.random() * 69) + 1));
+        this._cellsMap.addVehicle(this._vehicles[0], 0, randomNumberGenerator.intFromTo(0, 69));
+        this._cellsMap.addVehicle(this._vehicles[1], 0, randomNumberGenerator.intFromTo(0, 69));
+        this._cellsMap.addVehicle(this._vehicles[2], 1, randomNumberGenerator.intFromTo(0, 69));
+        this._cellsMap.addVehicle(this._vehicles[3], 1, randomNumberGenerator.intFromTo(0, 69));
+        this._cellsMap.addVehicle(this._vehicles[4], 1, randomNumberGenerator.intFromTo(0, 69));
+        this._cellsMap.addVehicle(this._vehicles[5], 1, randomNumberGenerator.intFromTo(0, 69));
         this._cellsNeighbours = cellsNeighbours;
     }
 

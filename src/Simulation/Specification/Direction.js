@@ -12,6 +12,22 @@ class Direction {
     id() {
         return this._direction;
     }
+
+    static newNorth() {
+        return new Direction("N");
+    }
+
+    static newSouth() {
+        return new Direction("S");
+    }
+
+    static newEast() {
+        return new Direction("E");
+    }
+
+    static newWest() {
+        return new Direction("W");
+    }
 }
 
 export default Direction;

@@ -5,6 +5,7 @@ import {roundaboutBukowe} from '../../src/Simulation/Specification/RoundaboutSpe
 import VehicleFactory from '../../src/Simulation/VehicleFactory.js';
 import CellsNeighbours from '../../src/Simulation/CellsNeighbours.js';
 import { range } from '../../src/JsWhyYouNoImplement.js';
+import Direction from '../../src/Simulation/Specification/Direction.js';
 
 describe("Test roundabout cells map", function() {
 
@@ -102,7 +103,7 @@ describe("Test roundabout cells map", function() {
         ];
 
         var truck = VehicleFactory.newTruck();
-        truck.setDestinationExit('N');
+        truck.setDestinationExit(Direction.newNorth());
         truck.setDestinationExitLaneId(0);
         cellsMap.addVehicle(truck, 1, 13);
 
@@ -164,7 +165,7 @@ describe("Test roundabout cells map", function() {
         ];
 
         var car = VehicleFactory.newCar();
-        car.setDestinationExit('N');
+        car.setDestinationExit(Direction.newNorth());
         car.setDestinationExitLaneId(0);
         cellsMap.addVehicle(car, 1, 0);
 
@@ -179,12 +180,12 @@ describe("Test roundabout cells map", function() {
 
     it("vehicles will not crash if one going slow and another is approaching quickly", () => {
         var car = VehicleFactory.newCar();
-        car.setDestinationExit('N');
+        car.setDestinationExit(Direction.newNorth());
         car.setDestinationExitLaneId(0);
         cellsMap.addVehicle(car, 1, 40);
 
         var truck = VehicleFactory.newTruck();
-        truck.setDestinationExit('N');
+        truck.setDestinationExit(Direction.newNorth());
         truck.setDestinationExitLaneId(0);
         cellsMap.addVehicle(truck, 1, 69);
 
@@ -204,7 +205,7 @@ describe("Test roundabout cells map", function() {
           2, 3, 4, 4, 3, 2, 2
         ];
         var car = VehicleFactory.newCar();
-        car.setDestinationExit('N');
+        car.setDestinationExit(Direction.newNorth());
         car.setDestinationExitLaneId(0);
         cellsMap.addVehicle(car, 1, 79);
 

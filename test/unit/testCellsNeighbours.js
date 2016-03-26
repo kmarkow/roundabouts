@@ -5,15 +5,16 @@ import UnitConverter from '../../src/GUI/UnitConverter.js';
 import {roundaboutBukowe} from '../../src/Simulation/Specification/RoundaboutSpecifications.js';
 import VehicleFactory from '../../src/Simulation/VehicleFactory.js'
 import {range} from '../../src/JsWhyYouNoImplement.js';
+import Direction from '../../src/Simulation/Specification/Direction.js';
 
 describe("Cells Neighbours", function() {
 
     it('accurately says when approaching exit on 2 lane roundabout', () => {
         var carsParameters = [
-            {"destinationRoadId": "N", "frontCellId": 10},
-            {"destinationRoadId": "W", "frontCellId": 30},
-            {"destinationRoadId": "S", "frontCellId": 50},
-            {"destinationRoadId": "E", "frontCellId": 70},
+            {"destinationRoadId": Direction.newNorth(), "frontCellId": 10},
+            {"destinationRoadId": Direction.newWest(), "frontCellId": 30},
+            {"destinationRoadId": Direction.newSouth(), "frontCellId": 50},
+            {"destinationRoadId": Direction.newEast(), "frontCellId": 70},
         ];
         var cellsNeighbours = new CellsNeighbours([70, 80]);
         carsParameters.forEach(carParamerers => {
@@ -29,10 +30,10 @@ describe("Cells Neighbours", function() {
 
     it('accurately says when approaching exit on 3 lane roundabout', () => {
         var carsParameters = [
-            {"destinationRoadId": "N", "frontCellId": 10},
-            {"destinationRoadId": "W", "frontCellId": 32},
-            {"destinationRoadId": "S", "frontCellId": 54},
-            {"destinationRoadId": "E", "frontCellId": 76},
+            {"destinationRoadId": Direction.newNorth(), "frontCellId": 10},
+            {"destinationRoadId": Direction.newWest(), "frontCellId": 32},
+            {"destinationRoadId": Direction.newSouth(), "frontCellId": 54},
+            {"destinationRoadId": Direction.newEast(), "frontCellId": 76},
         ];
         var cellsNeighbours = new CellsNeighbours([70, 80, 90]);
         carsParameters.forEach(carParamerers => {
@@ -48,10 +49,10 @@ describe("Cells Neighbours", function() {
 
     it('accurately says when not approaching exit', () => {
         var carsParameters = [
-            {"destinationRoadId": "N", "frontCellId": 4},
-            {"destinationRoadId": "W", "frontCellId": 22},
-            {"destinationRoadId": "S", "frontCellId": 24},
-            {"destinationRoadId": "E", "frontCellId": 26},
+            {"destinationRoadId": Direction.newNorth(), "frontCellId": 4},
+            {"destinationRoadId": Direction.newWest(), "frontCellId": 22},
+            {"destinationRoadId": Direction.newSouth(), "frontCellId": 24},
+            {"destinationRoadId": Direction.newEast(), "frontCellId": 26},
         ];
         var cellsNeighbours = new CellsNeighbours([70, 80, 90]);
         carsParameters.forEach(carParamerers => {
@@ -69,7 +70,7 @@ describe("Cells Neighbours", function() {
         var outerCellsLane = CellsLane.newLane(1, 80);
         var cellsNeighbours = new CellsNeighbours([70, 80]);
         var car1 = VehicleFactory.newCar();
-        car1.setDestinationExit('N');
+        car1.setDestinationExit(Direction.newNorth());
         car1.setDestinationExitLaneId(0);
         var vehicleCells = Array.from(range(16, car1.lengthCells()), cellNumber => {
             var cell = new Cell(cellNumber);

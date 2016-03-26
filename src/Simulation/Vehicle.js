@@ -10,9 +10,6 @@ class Vehicle {
         this._currentCells = [];
         this._maxSpeedWhenTurning = maxSpeedWhenTurning;
         this._driver = driver;
-        //if (driver.drivingRules.canTakeAnyLaneWhenLeavingFromRightLane() && this._isOnRightLane()) {
-        this._destinationExitLaneId = new RandomNumberGenerator().intFromTo(0, 1);
-        //}
     }
 
     maxSpeedWhenTurning() {
@@ -24,7 +21,7 @@ class Vehicle {
     }
 
     destinationExit() {
-        return this._destinationExit;
+        return this._destinationExit.id();
     }
 
     currentSpeed() {
