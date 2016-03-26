@@ -51,58 +51,59 @@ describe("Test roundabout cells map", function() {
                 {laneId: 1, cellNumber: 13},
             ],
             [
-                {laneId: 'N_EXIT_1', cellNumber: 1},
-                {laneId: 'N_EXIT_1', cellNumber: 0},
+                {laneId: 'N_EXIT_0', cellNumber: 1},
+                {laneId: 'N_EXIT_0', cellNumber: 0},
                 {laneId: 1, cellNumber: 17},
                 {laneId: 1, cellNumber: 16},
                 {laneId: 1, cellNumber: 15},
             ],
             [
-                {laneId: 'N_EXIT_1', cellNumber: 3},
-                {laneId: 'N_EXIT_1', cellNumber: 2},
-                {laneId: 'N_EXIT_1', cellNumber: 1},
-                {laneId: 'N_EXIT_1', cellNumber: 0},
+                {laneId: 'N_EXIT_0', cellNumber: 3},
+                {laneId: 'N_EXIT_0', cellNumber: 2},
+                {laneId: 'N_EXIT_0', cellNumber: 1},
+                {laneId: 'N_EXIT_0', cellNumber: 0},
                 {laneId: 1, cellNumber: 17},
             ],
             [
-                {laneId: 'N_EXIT_1', cellNumber: 5},
-                {laneId: 'N_EXIT_1', cellNumber: 4},
-                {laneId: 'N_EXIT_1', cellNumber: 3},
-                {laneId: 'N_EXIT_1', cellNumber: 2},
-                {laneId: 'N_EXIT_1', cellNumber: 1},
+                {laneId: 'N_EXIT_0', cellNumber: 5},
+                {laneId: 'N_EXIT_0', cellNumber: 4},
+                {laneId: 'N_EXIT_0', cellNumber: 3},
+                {laneId: 'N_EXIT_0', cellNumber: 2},
+                {laneId: 'N_EXIT_0', cellNumber: 1},
             ],
             [
-                {laneId: 'N_EXIT_1', cellNumber: 7},
-                {laneId: 'N_EXIT_1', cellNumber: 6},
-                {laneId: 'N_EXIT_1', cellNumber: 5},
-                {laneId: 'N_EXIT_1', cellNumber: 4},
-                {laneId: 'N_EXIT_1', cellNumber: 3},
+                {laneId: 'N_EXIT_0', cellNumber: 7},
+                {laneId: 'N_EXIT_0', cellNumber: 6},
+                {laneId: 'N_EXIT_0', cellNumber: 5},
+                {laneId: 'N_EXIT_0', cellNumber: 4},
+                {laneId: 'N_EXIT_0', cellNumber: 3},
             ],
             [
-                {laneId: 'N_EXIT_1', cellNumber: 9},
-                {laneId: 'N_EXIT_1', cellNumber: 8},
-                {laneId: 'N_EXIT_1', cellNumber: 7},
-                {laneId: 'N_EXIT_1', cellNumber: 6},
-                {laneId: 'N_EXIT_1', cellNumber: 5},
+                {laneId: 'N_EXIT_0', cellNumber: 9},
+                {laneId: 'N_EXIT_0', cellNumber: 8},
+                {laneId: 'N_EXIT_0', cellNumber: 7},
+                {laneId: 'N_EXIT_0', cellNumber: 6},
+                {laneId: 'N_EXIT_0', cellNumber: 5},
             ],
             [
-                {laneId: 'N_EXIT_1', cellNumber: 11},
-                {laneId: 'N_EXIT_1', cellNumber: 10},
-                {laneId: 'N_EXIT_1', cellNumber: 9},
-                {laneId: 'N_EXIT_1', cellNumber: 8},
-                {laneId: 'N_EXIT_1', cellNumber: 7},
+                {laneId: 'N_EXIT_0', cellNumber: 11},
+                {laneId: 'N_EXIT_0', cellNumber: 10},
+                {laneId: 'N_EXIT_0', cellNumber: 9},
+                {laneId: 'N_EXIT_0', cellNumber: 8},
+                {laneId: 'N_EXIT_0', cellNumber: 7},
             ],
             [
-                {laneId: 'N_EXIT_1', cellNumber: 13},
-                {laneId: 'N_EXIT_1', cellNumber: 12},
-                {laneId: 'N_EXIT_1', cellNumber: 11},
-                {laneId: 'N_EXIT_1', cellNumber: 10},
-                {laneId: 'N_EXIT_1', cellNumber: 9},
+                {laneId: 'N_EXIT_0', cellNumber: 13},
+                {laneId: 'N_EXIT_0', cellNumber: 12},
+                {laneId: 'N_EXIT_0', cellNumber: 11},
+                {laneId: 'N_EXIT_0', cellNumber: 10},
+                {laneId: 'N_EXIT_0', cellNumber: 9},
             ]
         ];
 
         var truck = VehicleFactory.newTruck();
         truck.setDestinationExit('N');
+        truck.setDestinationExitLaneId(0);
         cellsMap.addVehicle(truck, 1, 13);
 
         iterations.forEach(cellSpecification => {
@@ -145,25 +146,26 @@ describe("Test roundabout cells map", function() {
                 {laneId: 1, cellNumber: 17},
             ],
             [
-                {laneId: 'N_EXIT_1', cellNumber: 1},
-                {laneId: 'N_EXIT_1', cellNumber: 0},
+                {laneId: 'N_EXIT_0', cellNumber: 1},
+                {laneId: 'N_EXIT_0', cellNumber: 0},
             ],
             [
-                {laneId: 'N_EXIT_1', cellNumber: 4},
-                {laneId: 'N_EXIT_1', cellNumber: 3},
+                {laneId: 'N_EXIT_0', cellNumber: 4},
+                {laneId: 'N_EXIT_0', cellNumber: 3},
             ],
             [
-                {laneId: 'N_EXIT_1', cellNumber: 8},
-                {laneId: 'N_EXIT_1', cellNumber: 7},
+                {laneId: 'N_EXIT_0', cellNumber: 8},
+                {laneId: 'N_EXIT_0', cellNumber: 7},
             ],
             [
-                {laneId: 'N_EXIT_1', cellNumber: 13},
-                {laneId: 'N_EXIT_1', cellNumber: 12},
+                {laneId: 'N_EXIT_0', cellNumber: 13},
+                {laneId: 'N_EXIT_0', cellNumber: 12},
             ]
         ];
 
         var car = VehicleFactory.newCar();
         car.setDestinationExit('N');
+        car.setDestinationExitLaneId(0);
         cellsMap.addVehicle(car, 1, 0);
 
         iterations.forEach(cellSpecification => {
@@ -178,10 +180,12 @@ describe("Test roundabout cells map", function() {
     it("vehicles will not crash if one going slow and another is approaching quickly", () => {
         var car = VehicleFactory.newCar();
         car.setDestinationExit('N');
+        car.setDestinationExitLaneId(0);
         cellsMap.addVehicle(car, 1, 40);
 
         var truck = VehicleFactory.newTruck();
         truck.setDestinationExit('N');
+        truck.setDestinationExitLaneId(0);
         cellsMap.addVehicle(truck, 1, 69);
 
         function nextIteration() {
@@ -201,6 +205,7 @@ describe("Test roundabout cells map", function() {
         ];
         var car = VehicleFactory.newCar();
         car.setDestinationExit('N');
+        car.setDestinationExitLaneId(0);
         cellsMap.addVehicle(car, 1, 79);
 
         expectedSpeeds.forEach(expectedSpeed => {

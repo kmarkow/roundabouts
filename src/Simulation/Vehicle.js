@@ -1,13 +1,18 @@
+import RandomNumberGenerator from './RandomNumberGenerator.js';
 
 class Vehicle {
 
-    constructor(lengthCells, maxSpeed, maxSpeedWhenTurning) {
+    constructor(lengthCells, maxSpeed, maxSpeedWhenTurning, driver) {
         this._lengthCells = lengthCells;
         this._currentSpeed = 1;
         this._maxSpeed = maxSpeed;
         this._id = Math.round(Math.random()*16777215);
         this._currentCells = [];
         this._maxSpeedWhenTurning = maxSpeedWhenTurning;
+        this._driver = driver;
+        //if (driver.drivingRules.canTakeAnyLaneWhenLeavingFromRightLane() && this._isOnRightLane()) {
+        this._destinationExitLaneId = new RandomNumberGenerator().intFromTo(0, 1);
+        //}
     }
 
     maxSpeedWhenTurning() {
@@ -24,6 +29,14 @@ class Vehicle {
 
     currentSpeed() {
         return this._currentSpeed;
+    }
+
+    setDestinationExitLaneId(destinationExitLaneId) {
+        this._destinationExitLaneId = destinationExitLaneId;
+    }
+
+    destinationExitLaneId() {
+        return this._destinationExitLaneId;
     }
 
     moveToNextIteration(cellsMap, cellsNeighbours) {
@@ -114,8 +127,8 @@ class Vehicle {
     }
 
     _isApproachingExit(cellsNeighbours) {
-        return cellsNeighbours.isApproachingExit(this) && !this.frontCell().parentLane().isExitLane();
-
+        return cellsNeighbours.isApproachingExit(this) &&
+            !this.frontCell().parentLane().isExitLane();
     }
 }
 

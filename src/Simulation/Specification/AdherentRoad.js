@@ -29,7 +29,6 @@ class AdherentRoad {
         var exitLanes = Array.from(range(0, exitLanesCount), exitNumber => {
             return new Lane(`${direction.id()}_EXIT_${exitNumber}`, length, laneWidth, false)
         });
-        exitLanes.reverse();
 
         return new AdherentRoad(direction, length, entranceLanes, exitLanes);
     }

@@ -1,28 +1,49 @@
 import Vehicle from './Vehicle.js';
+import {Driver, DrivingSchool} from './DrivingRules.js';
+import Direction from './Specification/Direction.js';
 
 class VehicleFactory {
-    static newCar() {
-        return new Vehicle(2, 5, 2);
+
+    static newCar(driver) {
+        if (!driver) {
+            driver = DrivingSchool.newRegularDriver();
+        }
+        return new Vehicle(2, 5, 2, driver);
     }
 
-    static newMotorcycle() {
-        return new Vehicle(1, 5, 2);
+    static newMotorcycle(driver) {
+        if (!driver) {
+            driver = DrivingSchool.newRegularDriver();
+        }
+        return new Vehicle(1, 5, 2, driver);
     }
 
-    static newVan() {
-        return new Vehicle(3, 5, 2);
+    static newVan(driver) {
+        if (!driver) {
+            driver = DrivingSchool.newRegularDriver();
+        }
+        return new Vehicle(3, 5, 2, driver);
     }
 
-    static newMiniBus() {
-        return new Vehicle(4, 3, 2);
+    static newMiniBus(driver) {
+        if (!driver) {
+            driver = DrivingSchool.newRegularDriver();
+        }
+        return new Vehicle(4, 3, 2, driver);
     }
 
-    static newBus() {
-        return new Vehicle(5, 2, 1);
+    static newBus(driver) {
+        if (!driver) {
+            driver = DrivingSchool.newRegularDriver();
+        }
+        return new Vehicle(5, 2, 1, driver);
     }
 
-    static newTruck() {
-        return new Vehicle(5, 2, 1);
+    static newTruck(driver) {
+        if (!driver) {
+            driver = DrivingSchool.newRegularDriver();
+        }
+        return new Vehicle(5, 2, 1, driver);
     }
 }
 

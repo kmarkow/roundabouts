@@ -20,7 +20,7 @@ class CellsNeighbours  {
 
     isApproachingExit(vehicle) {
         //TODO: Base on rules check if can leave roundabout from the lane number
-        var closestDestinationExitOn = this._exits[vehicle.destinationExit()][0];
+        var closestDestinationExitOn = this._exits[vehicle.destinationExit()][vehicle.destinationExitLaneId()];
         var distanceFromExit = closestDestinationExitOn - vehicle.frontCell().number();
         var distanceTravelledIfStartsSlowingDown = range(
             vehicle.maxSpeedWhenTurning(), Math.max(0, vehicle.currentSpeed()-1)
@@ -34,7 +34,7 @@ class CellsNeighbours  {
     }
 
     canTakeExit(vehicle) {
-        var destinationExitCell = new Cell(this._exits[vehicle.destinationExit()][0]);
+        var destinationExitCell = new Cell(this._exits[vehicle.destinationExit()][vehicle.destinationExitLaneId()]);
         destinationExitCell.assignToLane(vehicle.frontCell().parentLane());
         return vehicle.currentCells().some(cell => {
            return cell.equals(destinationExitCell);

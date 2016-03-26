@@ -75,8 +75,7 @@ class CellsMap extends Observable {
         var oldVehicleCells = vehicle.currentCells();
         var sliceFrom = Math.max(0, vehicle.currentSpeed() - vehicle.lengthCells());
         var sliceTo = vehicle.currentSpeed();
-        //TODO: Hardcoded EXIT_1
-        var newVehicleCells = this._lanes[vehicle.destinationExit() + "_EXIT_1"].allCells().slice(sliceFrom, sliceTo).reverse();
+        var newVehicleCells = this._lanes[vehicle.destinationExit() + "_EXIT_" + vehicle.destinationExitLaneId().toString()].allCells().slice(sliceFrom, sliceTo).reverse();
         var newVehicleCells = newVehicleCells.concat(oldVehicleCells.slice(0, oldVehicleCells.length - newVehicleCells.length));
         vehicle.moveToCells(newVehicleCells);
     }

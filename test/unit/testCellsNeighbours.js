@@ -21,6 +21,7 @@ describe("Cells Neighbours", function() {
             spyOn(car, "currentSpeed").and.returnValue(5);
             spyOn(car, "frontCell").and.returnValue(new Cell(carParamerers.frontCellId));
             car.setDestinationExit(carParamerers.destinationRoadId);
+            car.setDestinationExitLaneId(0);
             expect(cellsNeighbours.isApproachingExit(car)).toBe(true);
         });
     });
@@ -38,6 +39,7 @@ describe("Cells Neighbours", function() {
             spyOn(car, "currentSpeed").and.returnValue(5);
             spyOn(car, "frontCell").and.returnValue(new Cell(carParamerers.frontCellId));
             car.setDestinationExit(carParamerers.destinationRoadId);
+            car.setDestinationExitLaneId(0);
             expect(cellsNeighbours.isApproachingExit(car)).toBe(true);
         });
     });
@@ -55,6 +57,7 @@ describe("Cells Neighbours", function() {
             spyOn(car, "currentSpeed").and.returnValue(5);
             spyOn(car, "frontCell").and.returnValue(new Cell(carParamerers.frontCellId));
             car.setDestinationExit(carParamerers.destinationRoadId);
+            car.setDestinationExitLaneId(0);
             expect(cellsNeighbours.isApproachingExit(car)).toBe(false);
         });
     });
@@ -64,6 +67,7 @@ describe("Cells Neighbours", function() {
         var cellsNeighbours = new CellsNeighbours(80);
         var car1 = VehicleFactory.newCar();
         car1.setDestinationExit('N');
+        car1.setDestinationExitLaneId(0);
         var vehicleCells = Array.from(range(16, car1.lengthCells()), cellNumber => {
             var cell = new Cell(cellNumber);
             cell.assignToLane(outerCellsLane);
