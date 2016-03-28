@@ -6,6 +6,7 @@ import {roundaboutBukowe, roundaboutThreeLanes} from './Simulation/Specification
 import {CellsMap} from './Simulation/CellsMap.js';
 import CellularAutomata from './Simulation/CellularAutomata.js';
 import CellsNeighbours from './Simulation/CellsNeighbours.js';
+import {DrivingRules} from './Simulation/DrivingRules.js';
 
 let unitConverter = new UnitConverter(
     roundaboutThreeLanes.roundaboutDiameter() + roundaboutThreeLanes.adherentRoadLength() * 2,
@@ -49,11 +50,12 @@ let roundaboutCellsDrawer = new CellsDrawer(
 var cellsNeighbours = new CellsNeighbours(
     roundaboutBukoweCellsMap.cellsCountsOnInnerRoadLanes()
 );
-let cellularAutomata = new CellularAutomata(roundaboutBukoweCellsMap, cellsNeighbours);
+
+let drivingRules = DrivingRules.newRules1(roundaboutBukowe.lanesCount());
+let cellularAutomata = new CellularAutomata(roundaboutBukoweCellsMap, cellsNeighbours, drivingRules);
 
 roundaboutDrawer.draw();
 setInterval(() => {
     cellularAutomata.nextIteration();
 }, 1000);
-
 

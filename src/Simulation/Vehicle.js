@@ -2,14 +2,14 @@ import RandomNumberGenerator from './RandomNumberGenerator.js';
 
 class Vehicle {
 
-    constructor(lengthCells, maxSpeed, maxSpeedWhenTurning, driver) {
+    constructor(lengthCells, maxSpeed, maxSpeedWhenTurning, drivingRules) {
         this._lengthCells = lengthCells;
         this._currentSpeed = 1;
         this._maxSpeed = maxSpeed;
         this._id = Math.round(Math.random()*16777215);
         this._currentCells = [];
         this._maxSpeedWhenTurning = maxSpeedWhenTurning;
-        this._driver = driver;
+        this._drivingRules = drivingRules;
     }
 
     maxSpeedWhenTurning() {
@@ -48,8 +48,7 @@ class Vehicle {
                 return;
             }
             var vehicleOnTheRight = cellsMap.vehicleOnTheRight(this);
-            // TODO: && this._drivingRules.shouldYieldTo(this, vehicleOnTheRight)) { Check if vehicle on right is taking left lane or going straight
-            if (vehicleOnTheRight ) {
+            if (vehicleOnTheRight && this._drivingRules.exitRules.shouldYieldTo(this, vehicleOnTheRight)) {
                 this._stop();
             } else {
                 if (this._hasStopped()) {

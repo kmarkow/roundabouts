@@ -6,20 +6,21 @@ import Direction from './Specification/Direction.js';
 
 class CellularAutomata {
 
-    constructor(cellsMap, cellsNeighbours) {
+    constructor(cellsMap, cellsNeighbours, drivingRules) {
         this._cellsMap = cellsMap;
         this._cellsNeighbours = cellsNeighbours;
+        this._drivingRules = drivingRules;
         var randomNumberGenerator = new RandomNumberGenerator();
         this._vehicles = [
-            VehicleFactory.newCar(),
-            VehicleFactory.newCar(),
-            VehicleFactory.newCar(),
-            VehicleFactory.newCar(),
-            VehicleFactory.newCar(),
-            VehicleFactory.newCar(),
-            VehicleFactory.newCar(),
-            VehicleFactory.newVan(),
-            VehicleFactory.newTruck()
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newVan(this._drivingRules),
+            VehicleFactory.newTruck(this._drivingRules)
         ];
         this._vehicles.forEach(vehicle => {
            vehicle.setDestinationExit(Direction.newNorth());

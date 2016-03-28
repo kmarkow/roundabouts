@@ -6,8 +6,15 @@ import {roundaboutBukowe} from '../../src/Simulation/Specification/RoundaboutSpe
 import VehicleFactory from '../../src/Simulation/VehicleFactory.js'
 import {range} from '../../src/JsWhyYouNoImplement.js';
 import Direction from '../../src/Simulation/Specification/Direction.js';
+import {DrivingRules} from '../../src/Simulation/DrivingRules.js';
 
 describe("Cells Neighbours", function() {
+
+    var drivingRules;
+
+    beforeEach(()=>{
+        drivingRules = DrivingRules.newRules1(2);
+    });
 
     it('accurately says when approaching exit on 2 lane roundabout', () => {
         var carsParameters = [
@@ -18,7 +25,7 @@ describe("Cells Neighbours", function() {
         ];
         var cellsNeighbours = new CellsNeighbours([70, 80]);
         carsParameters.forEach(carParamerers => {
-            var car = VehicleFactory.newCar();
+            var car = VehicleFactory.newCar(drivingRules);
             spyOn(car, "currentSpeed").and.returnValue(5);
             spyOn(car, "frontCell").and.returnValue(new Cell(carParamerers.frontCellId));
             spyOn(car, "currentLaneId").and.returnValue(1);
@@ -37,7 +44,7 @@ describe("Cells Neighbours", function() {
         ];
         var cellsNeighbours = new CellsNeighbours([70, 80, 90]);
         carsParameters.forEach(carParamerers => {
-            var car = VehicleFactory.newCar();
+            var car = VehicleFactory.newCar(drivingRules);
             spyOn(car, "currentSpeed").and.returnValue(5);
             spyOn(car, "frontCell").and.returnValue(new Cell(carParamerers.frontCellId));
             spyOn(car, "currentLaneId").and.returnValue(2);
@@ -56,7 +63,7 @@ describe("Cells Neighbours", function() {
         ];
         var cellsNeighbours = new CellsNeighbours([70, 80, 90]);
         carsParameters.forEach(carParamerers => {
-            var car = VehicleFactory.newCar();
+            var car = VehicleFactory.newCar(drivingRules);
             spyOn(car, "currentSpeed").and.returnValue(5);
             spyOn(car, "frontCell").and.returnValue(new Cell(carParamerers.frontCellId));
             spyOn(car, "currentLaneId").and.returnValue(2);
@@ -69,7 +76,7 @@ describe("Cells Neighbours", function() {
     it('accurately says when can take exit', () => {
         var outerCellsLane = CellsLane.newLane(1, 80);
         var cellsNeighbours = new CellsNeighbours([70, 80]);
-        var car1 = VehicleFactory.newCar();
+        var car1 = VehicleFactory.newCar(drivingRules);
         car1.setDestinationExit(Direction.newNorth());
         car1.setDestinationExitLaneId(0);
         var vehicleCells = Array.from(range(16, car1.lengthCells()), cellNumber => {

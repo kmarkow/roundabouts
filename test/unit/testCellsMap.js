@@ -6,12 +6,14 @@ import VehicleFactory from '../../src/Simulation/VehicleFactory.js';
 import CellsNeighbours from '../../src/Simulation/CellsNeighbours.js';
 import { range } from '../../src/JsWhyYouNoImplement.js';
 import Direction from '../../src/Simulation/Specification/Direction.js';
+import {DrivingRules} from '../../src/Simulation/DrivingRules.js';
 
 describe("Test roundabout cells map", function() {
 
     var unitConverter;
     var cellsMap;
     var cellsNeighbours;
+    var drivingRules;
 
     beforeEach(()=>{
         unitConverter  = new UnitConverter(
@@ -20,11 +22,13 @@ describe("Test roundabout cells map", function() {
         );
         cellsMap = new CellsMap(roundaboutBukowe, unitConverter);
         cellsNeighbours = new CellsNeighbours([70, 80]);
+        drivingRules = DrivingRules.newRules1(2);
     });
 
     it('Accurately says if there is nothing in front of a vehicle', () => {
-        var car1 = VehicleFactory.newCar();
-        var car2 = VehicleFactory.newCar();
+
+        var car1 = VehicleFactory.newCar(drivingRules);
+        var car2 = VehicleFactory.newCar(drivingRules);
 
         var distanceBetweenCar1And2 = 1;
         cellsMap.addVehicle(car1, 0, distanceBetweenCar1And2 + car1.lengthCells());
@@ -102,7 +106,7 @@ describe("Test roundabout cells map", function() {
             ]
         ];
 
-        var truck = VehicleFactory.newTruck();
+        var truck = VehicleFactory.newTruck(drivingRules);
         truck.setDestinationExit(Direction.newNorth());
         truck.setDestinationExitLaneId(0);
         cellsMap.addVehicle(truck, 1, 13);
@@ -164,7 +168,7 @@ describe("Test roundabout cells map", function() {
             ]
         ];
 
-        var car = VehicleFactory.newCar();
+        var car = VehicleFactory.newCar(drivingRules);
         car.setDestinationExit(Direction.newNorth());
         car.setDestinationExitLaneId(0);
         cellsMap.addVehicle(car, 1, 0);
@@ -179,12 +183,12 @@ describe("Test roundabout cells map", function() {
     });
 
     it("vehicles will not crash if one going slow and another is approaching quickly", () => {
-        var car = VehicleFactory.newCar();
+        var car = VehicleFactory.newCar(drivingRules);
         car.setDestinationExit(Direction.newNorth());
         car.setDestinationExitLaneId(0);
         cellsMap.addVehicle(car, 1, 40);
 
-        var truck = VehicleFactory.newTruck();
+        var truck = VehicleFactory.newTruck(drivingRules);
         truck.setDestinationExit(Direction.newNorth());
         truck.setDestinationExitLaneId(0);
         cellsMap.addVehicle(truck, 1, 69);
@@ -203,7 +207,7 @@ describe("Test roundabout cells map", function() {
         var expectedSpeeds = [
           2, 3, 4, 4, 3, 2, 2
         ];
-        var car = VehicleFactory.newCar();
+        var car = VehicleFactory.newCar(drivingRules);
         car.setDestinationExit(Direction.newNorth());
         car.setDestinationExitLaneId(0);
         cellsMap.addVehicle(car, 1, 79);
@@ -219,12 +223,12 @@ describe("Test roundabout cells map", function() {
     });
 
     it('checks if a car is in right mirror before leaving roundabout', () => {
-        var car = VehicleFactory.newCar();
+        var car = VehicleFactory.newCar(drivingRules);
         car.setDestinationExit(Direction.newNorth());
         car.setDestinationExitLaneId(1);
         cellsMap.addVehicle(car, 1, 16);
 
-        var car2 = VehicleFactory.newCar();
+        var car2 = VehicleFactory.newCar(drivingRules);
         car2.setDestinationExit(Direction.newNorth());
         car2.setDestinationExitLaneId(1);
         cellsMap.addVehicle(car2, 0, 14);
@@ -249,12 +253,12 @@ describe("Test roundabout cells map", function() {
     });
 
     it('find vehicle on the right', () => {
-        var car = VehicleFactory.newCar();
+        var car = VehicleFactory.newCar(drivingRules);
         car.setDestinationExit(Direction.newNorth());
         car.setDestinationExitLaneId(1);
         cellsMap.addVehicle(car, 1, 16);
 
-        var car2 = VehicleFactory.newCar();
+        var car2 = VehicleFactory.newCar(drivingRules);
         car2.setDestinationExit(Direction.newNorth());
         car2.setDestinationExitLaneId(1);
         cellsMap.addVehicle(car2, 0, 14);
