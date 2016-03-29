@@ -38,7 +38,6 @@ describe("Cells Lane", function() {
 
         var cellsLane = new CellsLane("dummyId", [cell1, cell2, cell3, cell4], false);
 
-        //TODO: Przemyslec zmiane tego moze powinna przyjmowac parametr z ewentualna droga do uzupelnienia?
         expect(cellsLane.cellsNextTo(cell3, 2)).toEqual([cell4]);
         expect(cellsLane.cellsNextTo(cell4, 2)).toEqual([]);
         expect(cellsLane.cellsPreviousTo(cell1, 2)).toEqual([]);

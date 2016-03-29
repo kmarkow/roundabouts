@@ -28,6 +28,16 @@ class CellsLane {
         return this._cellsNextTo(cell, limitTo, this._allCells);
     }
 
+    cellsNextToNumber(cellNumber, limitTo) {
+        var cell = this._allCells[cellNumber];
+        return this.cellsNextTo(cell, limitTo);
+    }
+
+    cellsPreviousToNumber(cellNumber, limitTo) {
+        var cell = this._allCells[cellNumber];
+        return this.cellsPreviousTo(cell, limitTo);
+    }
+
     cellsPreviousTo(cell, limitTo) {
         return this._cellsNextTo(cell, limitTo, this._allCellsReversed);
     }
@@ -42,6 +52,18 @@ class CellsLane {
 
     firstCells(numberOfCells) {
         return this._allCells.slice(0, numberOfCells);
+    }
+
+    isExitLane() {
+        return this.id().toString().includes('EXIT');
+    }
+
+    isEntranceLane() {
+        return this.id().toString().includes('ENTRANCE');
+    }
+
+    isRoundaboutLane() {
+        return !this.isExitLane() && !this.isEntranceLane();
     }
 
     _cellsNextTo(cell, limitTo, arrayFrom) {
@@ -59,14 +81,6 @@ class CellsLane {
             nextCells = nextCells.concat(arrayFrom.slice(0, missingCells));
         }
         return nextCells;
-    }
-
-    isExitLane() {
-        return !this._isRounded; //TODO: Take care of entrances also
-    }
-
-    isRoundaboutLane() {
-        return this._isRounded;
     }
 }
 

@@ -4,8 +4,9 @@ import { range } from '../JsWhyYouNoImplement.js';
 
 class CellsNeighbours  {
 
-    constructor(laneCellsCounts) {
-        this._exits = Array.from(laneCellsCounts, laneCellsCount => {
+    constructor(roundaboutLaneCellsCount, entranceLanesCount, entranceLaneCellsCount) {
+        this._maxCellIdOnEntrance = entranceLaneCellsCount - 1;
+        this._exits = Array.from(roundaboutLaneCellsCount, laneCellsCount => {
             var roadEvery = Math.floor(laneCellsCount / 4);
             var firstRoadAt = roadEvery - 3;
             var exits = new Map();
@@ -14,6 +15,22 @@ class CellsNeighbours  {
             exits.set('S', [firstRoadAt + roadEvery * 2, firstRoadAt + 1 + roadEvery * 2]);
             exits.set('E', [firstRoadAt + roadEvery * 3, firstRoadAt + 1 + roadEvery * 3]);
             return exits;
+        });
+        this._entrances = new Map();
+        ["N", "W", "S", "E"].forEach((direction, multiplier) => {
+            roundaboutLaneCellsCount.forEach((laneCellsCount, roundaboutLaneId) => {
+                var roadEvery = Math.floor(laneCellsCount / 4);
+                range(0, entranceLanesCount).forEach(entranceLaneId => {
+                    var value = roadEvery * (multiplier + 1) - entranceLaneId + 1;
+                    if (value >= laneCellsCount) {
+                        value = value - laneCellsCount;
+                    }
+                    this._entrances.set(
+                        `${direction} ${entranceLaneId} ${roundaboutLaneId}`,
+                        value
+                    );
+                });
+            });
         });
     }
 
@@ -34,6 +51,19 @@ class CellsNeighbours  {
         return false;
     }
 
+    isApproachingRoundabout(vehicle) {
+        var distanceFromEntrance = this._maxCellIdOnEntrance - vehicle.frontCell().number();
+        var distanceTravelledIfStartsSlowingDown = range(
+            vehicle.maxSpeedWhenTurning(), Math.max(0, vehicle.currentSpeed()-1)
+        ).reduce((previousValue, currentValue) => {
+            return previousValue + currentValue;
+        }, 0);
+        if (distanceTravelledIfStartsSlowingDown >= distanceFromEntrance && distanceFromEntrance > 0) {
+            return true;
+        }
+        return false;
+    }
+
     approachedExit(vehicle) {
         var destinationExitCellId = this._destinationExitCellIdFor(vehicle);
         if (destinationExitCellId == null) {
@@ -44,6 +74,15 @@ class CellsNeighbours  {
         return vehicle.currentCells().some(cell => {
            return cell.equals(destinationExitCell);
         });
+    }
+
+    approachedEntrance(vehicle) {
+        return vehicle.frontCell().parentLane().isEntranceLane() &&
+            vehicle.frontCell().number() == this._maxCellIdOnEntrance;
+    }
+
+    firstCellNumberOnEntrance(entranceRoadId, entranceLaneId, roundaboutLaneId) {
+        return this._entrances.get(`${entranceRoadId} ${entranceLaneId} ${roundaboutLaneId}`);
     }
 
     _destinationExitCellIdFor(vehicle) {

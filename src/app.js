@@ -48,7 +48,9 @@ let roundaboutCellsDrawer = new CellsDrawer(
 );
 
 var cellsNeighbours = new CellsNeighbours(
-    roundaboutBukoweCellsMap.cellsCountsOnInnerRoadLanes()
+    roundaboutBukoweCellsMap.cellsCountsOnInnerRoadLanes(),
+    roundaboutBukowe.adherentLanesCount() / 2,
+    unitConverter.metersAsCells(roundaboutBukowe.adherentRoadLength())
 );
 
 let drivingRules = DrivingRules.newRules1(roundaboutBukowe.lanesCount());

@@ -16,6 +16,38 @@ describe("Cells Neighbours", function() {
         drivingRules = DrivingRules.newRules1(2);
     });
 
+    it('accurately says when approaching entrance', () =>{
+        var testCases = [
+            {"speed": 4, cellId: 4, isApproaching: true},
+            {"speed": 3, cellId: 4, isApproaching: false},
+        ];
+        var cellsNeighbours = new CellsNeighbours([70, 80], 2, 14);
+
+        testCases.forEach(testCase => {
+            var car = VehicleFactory.newCar(drivingRules);
+            spyOn(car, "currentSpeed").and.returnValue(testCase["speed"]);
+            spyOn(car, "frontCell").and.returnValue(new Cell(testCase["cellId"]));
+            expect(cellsNeighbours.isApproachingRoundabout(car)).toEqual(testCase["isApproaching"]);
+        });
+    });
+
+    it('accurately says when approached entrance', () => {
+        var cellsNeighbours = new CellsNeighbours([70, 80], 2, 14);
+        var car = VehicleFactory.newCar(drivingRules);
+        var cell = new Cell(13);
+        cell.assignToLane(new CellsLane("FAKE_ENTRANCE_LANE", [], false));
+        spyOn(car, "frontCell").and.returnValue(cell);
+        expect(cellsNeighbours.approachedEntrance(car)).toEqual(true);
+    });
+
+    it('accurately returns entrance cells', () => {
+        var cellsNeighbours = new CellsNeighbours([70, 80], 2, 14);
+        expect(cellsNeighbours.firstCellNumberOnEntrance('N', 1, 1)).toEqual(20);
+        expect(cellsNeighbours.firstCellNumberOnEntrance('N', 0, 1)).toEqual(21);
+        expect(cellsNeighbours.firstCellNumberOnEntrance('N', 1, 0)).toEqual(17);
+        expect(cellsNeighbours.firstCellNumberOnEntrance('N', 0, 0)).toEqual(18);
+    });
+
     it('accurately says when approaching exit on 2 lane roundabout', () => {
         var carsParameters = [
             {"destinationRoadId": Direction.newNorth(), "frontCellId": 10},
@@ -23,7 +55,7 @@ describe("Cells Neighbours", function() {
             {"destinationRoadId": Direction.newSouth(), "frontCellId": 50},
             {"destinationRoadId": Direction.newEast(), "frontCellId": 70},
         ];
-        var cellsNeighbours = new CellsNeighbours([70, 80]);
+        var cellsNeighbours = new CellsNeighbours([70, 80], 2, 14);
         carsParameters.forEach(carParamerers => {
             var car = VehicleFactory.newCar(drivingRules);
             spyOn(car, "currentSpeed").and.returnValue(5);
@@ -42,9 +74,9 @@ describe("Cells Neighbours", function() {
             {"destinationRoadId": Direction.newSouth(), "frontCellId": 54},
             {"destinationRoadId": Direction.newEast(), "frontCellId": 76},
         ];
-        var cellsNeighbours = new CellsNeighbours([70, 80, 90]);
+        var cellsNeighbours = new CellsNeighbours([70, 80, 90], 2, 14);
         carsParameters.forEach(carParamerers => {
-            var car = VehicleFactory.newCar(drivingRules);
+            var car = VehicleFactory.newCar(DrivingRules.newRules1(3));
             spyOn(car, "currentSpeed").and.returnValue(5);
             spyOn(car, "frontCell").and.returnValue(new Cell(carParamerers.frontCellId));
             spyOn(car, "currentLaneId").and.returnValue(2);
@@ -61,7 +93,7 @@ describe("Cells Neighbours", function() {
             {"destinationRoadId": Direction.newSouth(), "frontCellId": 24},
             {"destinationRoadId": Direction.newEast(), "frontCellId": 26},
         ];
-        var cellsNeighbours = new CellsNeighbours([70, 80, 90]);
+        var cellsNeighbours = new CellsNeighbours([70, 80, 90], 2, 14);
         carsParameters.forEach(carParamerers => {
             var car = VehicleFactory.newCar(drivingRules);
             spyOn(car, "currentSpeed").and.returnValue(5);
@@ -75,7 +107,7 @@ describe("Cells Neighbours", function() {
 
     it('accurately says when can take exit', () => {
         var outerCellsLane = CellsLane.newLane(1, 80);
-        var cellsNeighbours = new CellsNeighbours([70, 80]);
+        var cellsNeighbours = new CellsNeighbours([70, 80], 2, 14);
         var car1 = VehicleFactory.newCar(drivingRules);
         car1.setDestinationExit(Direction.newNorth());
         car1.setDestinationExitLaneId(0);

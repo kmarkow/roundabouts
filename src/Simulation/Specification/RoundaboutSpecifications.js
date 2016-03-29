@@ -42,7 +42,7 @@ class RoundaboutSpecification {
 
     adherentRoadLength()
     {
-        return 35; // 25 meters
+        return 35; // 35 meters
     }
 
     lanesWidth() {
@@ -120,6 +120,13 @@ class RoundaboutSpecification {
         }
         if (this.lanesCount() == 3 && laneId == 1) {
             return 2;
+        }
+        return null;
+    }
+
+    entranceLaneIdToTheRightOf(laneId) {
+        if (laneId.includes("_ENTRANCE_1")) {
+            return laneId.replace("_ENTRANCE_1", "_ENTRANCE_0");
         }
         return null;
     }
