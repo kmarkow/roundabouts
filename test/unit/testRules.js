@@ -1,5 +1,6 @@
 import Direction from '../../src/Simulation/Specification/Direction.js';
-import {DrivingRules, ExitRule1, EntranceRule1} from '../../src/Simulation/DrivingRules.js';
+import {DrivingRules, ExitRule1} from '../../src/Simulation/DrivingRules.js';
+import {CurrentRules} from '../../src/Simulation/EntranceRules.js';
 import VehicleFactory from '../../src/Simulation/VehicleFactory.js'
 import CellsLane from '../../src/Simulation/CellsLane.js';
 import Path from '../../src/Simulation/Path.js';
@@ -85,7 +86,7 @@ describe("Rule", function() {
     });
 
     it('entrance rule #1 right-outer yields to outer-outer and does not yield to middle-middle', () => {
-        var entranceRule = new EntranceRule1(LANES_COUNT);
+        var entranceRule = new CurrentRules(LANES_COUNT);
         var car_outer_lane = givenCarOnOuterLane(Direction.newWest(), 1);
         var car_middle_lane = givenCarOnMiddleLane(Direction.newWest(), 1);
         var car_on_north_entrance = givenCarOnEntrance(0, 1, 0);
@@ -95,7 +96,7 @@ describe("Rule", function() {
     });
 
     it('entrance rule #1 right-middle yields', () => {
-        var entranceRule = new EntranceRule1(LANES_COUNT);
+        var entranceRule = new CurrentRules(LANES_COUNT);
         var car_outer_lane = givenCarOnOuterLane(Direction.newWest(), 1);
         var car_middle_lane = givenCarOnMiddleLane(Direction.newWest(), 1);
         var car_on_right_lane = givenCarOnEntrance(0, 0, 0);
@@ -105,7 +106,7 @@ describe("Rule", function() {
     });
 
     it('entrance rule #1 left-middle yields', () => {
-        var entranceRule = new EntranceRule1(LANES_COUNT);
+        var entranceRule = new CurrentRules(LANES_COUNT);
         var car_outer_lane = givenCarOnOuterLane(Direction.newWest(), 1);
         var car_middle_lane = givenCarOnMiddleLane(Direction.newWest(), 1);
         var car_on_left_lane = givenCarOnEntrance(1, 0, 1);
@@ -119,7 +120,7 @@ describe("Rule", function() {
     });
 
     it('entrance rule #1 left-outer yields', () => {
-        var entranceRule = new EntranceRule1(LANES_COUNT);
+        var entranceRule = new CurrentRules(LANES_COUNT);
         var car_outer_lane = givenCarOnOuterLane(Direction.newWest(), 1);
         var car_middle_lane = givenCarOnMiddleLane(Direction.newWest(), 1);
         var car_on_left_lane = givenCarOnEntrance(1, 1, 1);
