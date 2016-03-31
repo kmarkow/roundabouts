@@ -16,14 +16,6 @@ class Vehicle {
         return this._maxSpeedWhenTurning;
     }
 
-    setDestinationExit(destinationExit) {
-        this._destinationExit = destinationExit;
-    }
-
-    destinationExit() {
-        return this._destinationExit.id();
-    }
-
     currentSpeed() {
         return this._currentSpeed;
     }
@@ -32,36 +24,28 @@ class Vehicle {
         return this.frontCell().parentLane().id();
     }
 
-    setDestinationExitLaneId(destinationExitLaneId) {
-        this._destinationExitLaneId = destinationExitLaneId;
+    destinationExit() {
+        return this._path.destinationExit();
     }
 
     destinationExitLaneId() {
-        return this._destinationExitLaneId;
+        return this._path.destinationExitLaneId();
     }
 
     entranceLaneId() {
-        return this._entranceLaneId;
+        return this._path.entranceLaneId();
     }
 
     roundaboutLaneId() {
-        return this._roundaboutLaneId;
+        return this._path.roundaboutLaneId();
     }
 
     entranceRoadId() {
-        return this._entranceRoadId.id();
+        return this._path.entranceRoadId();
     }
 
-    setEntranceLaneId(entranceLaneId) {
-        this._entranceLaneId = entranceLaneId;
-    }
-
-    setRoundaboutLaneId(roundaboutLaneId) {
-        this._roundaboutLaneId = roundaboutLaneId;
-    }
-
-    setEntranceRoad(entranceRoadId) {
-        this._entranceRoadId = entranceRoadId;
+    setPath(path) {
+        this._path = path;
     }
 
     moveToNextIteration(cellsMap, cellsNeighbours) {
@@ -93,7 +77,9 @@ class Vehicle {
             if (this._hasStopped() && nothingInFrontOnRoundabout) {
                 this._accelerate(this.maxSpeedWhenTurning());
             }
-            cellsMap.takeEntrance(this, cellsNeighbours);
+            if(nothingInFrontOnRoundabout) {
+                cellsMap.takeEntrance(this, cellsNeighbours);
+            }
             return;
         }
 

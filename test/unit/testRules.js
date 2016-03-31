@@ -2,6 +2,7 @@ import Direction from '../../src/Simulation/Specification/Direction.js';
 import {DrivingRules, ExitRule1, EntranceRule1} from '../../src/Simulation/DrivingRules.js';
 import VehicleFactory from '../../src/Simulation/VehicleFactory.js'
 import CellsLane from '../../src/Simulation/CellsLane.js';
+import Path from '../../src/Simulation/Path.js';
 
 describe("Rule", function() {
 
@@ -18,9 +19,8 @@ describe("Rule", function() {
 
     function givenCarOnOuterLane(directionExit, exitLaneId=1) {
         var car_outer_lane = VehicleFactory.newCar(drivingRules);
-        car_outer_lane.setRoundaboutLaneId(1);
-        car_outer_lane.setDestinationExit(directionExit);
-        car_outer_lane.setDestinationExitLaneId(exitLaneId);
+        var path = new Path(null, null, 1, directionExit, exitLaneId);
+        car_outer_lane.setPath(path);
         spyOn(car_outer_lane, "currentLaneId").and.returnValue(1);
         spyOn(car_outer_lane, "frontCell").and.returnValue(fakeLane(1));
         return car_outer_lane;
@@ -28,9 +28,8 @@ describe("Rule", function() {
 
     function givenCarOnMiddleLane(directionExit, exitLaneId=1) {
         var car_middle_lane = VehicleFactory.newCar(drivingRules);
-        car_middle_lane.setRoundaboutLaneId(0);
-        car_middle_lane.setDestinationExit(directionExit);
-        car_middle_lane.setDestinationExitLaneId(exitLaneId);
+        var path = new Path(null, null, 0, directionExit, exitLaneId);
+        car_middle_lane.setPath(path);
         spyOn(car_middle_lane, "currentLaneId").and.returnValue(0);
         spyOn(car_middle_lane, "frontCell").and.returnValue(fakeLane(0));
         return car_middle_lane;
@@ -38,11 +37,10 @@ describe("Rule", function() {
 
     function givenCarOnEntrance(entranceLaneId, roundaboutLaneId, exitLaneId) {
         var car = VehicleFactory.newCar(drivingRules);
-        car.setEntranceRoad(Direction.newNorth());
-        car.setEntranceLaneId(entranceLaneId); //left
-        car.setRoundaboutLaneId(roundaboutLaneId); // middle
-        car.setDestinationExit(Direction.newSouth());
-        car.setDestinationExitLaneId(exitLaneId); //left
+        var path = new Path(
+            Direction.newNorth(), entranceLaneId, roundaboutLaneId, Direction.newSouth(), exitLaneId
+        );
+        car.setPath(path);
         spyOn(car, "frontCell").and.returnValue(
             fakeLane(`${car.entranceRoadId()}_ENTRANCE_${entranceLaneId}`, false)
         );

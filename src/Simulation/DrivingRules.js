@@ -1,4 +1,6 @@
 import Direction from './Specification/Direction.js';
+import RandomNumberGenerator from './RandomNumberGenerator.js';
+import Path from './Path.js';
 
 class ExitRule1 {
     constructor(numberOfRoundaboutLanes) {
@@ -81,13 +83,34 @@ class EntranceRule1 {
 }
 
 class DrivingRules {
-    constructor(entranceRules, exitRules) {
+    constructor(roundaboutLanesCount, entranceRules, exitRules) {
+        this.roundaboutLanesCount = roundaboutLanesCount;
         this.entranceRules = entranceRules;
         this.exitRules = exitRules;
     }
 
+    randomPath() {
+        var allDirections = Direction.allDirections();
+        var entranceRoad = allDirections[Math.floor(Math.random()*allDirections.length)];
+        var exitRoad = allDirections[Math.floor(Math.random()*allDirections.length)];
+
+        var randomNumberGenerator = new RandomNumberGenerator();
+        var entranceLaneId = randomNumberGenerator.intFromTo(0, 1);
+        var roundaboutLaneId = randomNumberGenerator.intFromTo(0, 1);
+        var destinationExitLaneId = randomNumberGenerator.intFromTo(0, 1);
+
+        return new Path(
+            entranceRoad,
+            entranceLaneId,
+            roundaboutLaneId,
+            exitRoad,
+            destinationExitLaneId
+        );
+    }
+
     static newRules1(roundaboutLanesCount) {
         return new DrivingRules(
+            roundaboutLanesCount,
             new EntranceRule1(roundaboutLanesCount),
             new ExitRule1(roundaboutLanesCount)
         );

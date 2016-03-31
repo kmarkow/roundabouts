@@ -16,29 +16,18 @@ class CellularAutomata {
             VehicleFactory.newCar(this._drivingRules),
             VehicleFactory.newCar(this._drivingRules),
             VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
             VehicleFactory.newVan(this._drivingRules),
             VehicleFactory.newTruck(this._drivingRules)
         ];
-        this._vehicles.forEach(vehicle => {
-           vehicle.setDestinationExit(Direction.newNorth());
-           vehicle.setDestinationExitLaneId(randomNumberGenerator.intFromTo(0, 1));
-        });
 
-        var directions = Direction.allDirections();
         this._vehicles.forEach(vehicle => {
-            var entranceRoad = directions[Math.floor(Math.random()*directions.length)];
-            var entranceLaneId = randomNumberGenerator.intFromTo(0, 1);
-            var roundaboutLaneId = randomNumberGenerator.intFromTo(0, 1);
-            var exitRoad = directions[Math.floor(Math.random()*directions.length)];
-            var exitLaneId = randomNumberGenerator.intFromTo(0, 1);
-            vehicle.setEntranceRoad(entranceRoad);
-            vehicle.setEntranceLaneId(entranceLaneId);
-            vehicle.setRoundaboutLaneId(roundaboutLaneId);
-            vehicle.setDestinationExit(exitRoad);
-            vehicle.setDestinationExitLaneId(exitLaneId);
+            vehicle.setPath(drivingRules.randomPath());
             this._cellsMap.addVehicle(
                 vehicle,
-                `${entranceRoad.id()}_ENTRANCE_${entranceLaneId}`,
+                `${vehicle.entranceRoadId()}_ENTRANCE_${vehicle.entranceLaneId()}`,
                 randomNumberGenerator.intFromTo(vehicle.lengthCells(), 13-vehicle.lengthCells())
             );
         });

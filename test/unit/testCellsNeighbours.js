@@ -7,6 +7,7 @@ import VehicleFactory from '../../src/Simulation/VehicleFactory.js'
 import {range} from '../../src/JsWhyYouNoImplement.js';
 import Direction from '../../src/Simulation/Specification/Direction.js';
 import {DrivingRules} from '../../src/Simulation/DrivingRules.js';
+import Path from '../../src/Simulation/Path.js';
 
 describe("Cells Neighbours", function() {
 
@@ -61,8 +62,8 @@ describe("Cells Neighbours", function() {
             spyOn(car, "currentSpeed").and.returnValue(5);
             spyOn(car, "frontCell").and.returnValue(new Cell(carParamerers.frontCellId));
             spyOn(car, "currentLaneId").and.returnValue(1);
-            car.setDestinationExit(carParamerers.destinationRoadId);
-            car.setDestinationExitLaneId(0);
+            var path = new Path(null, null, null, carParamerers.destinationRoadId, 0);
+            car.setPath(path);
             expect(cellsNeighbours.isApproachingExit(car)).toBe(true);
         });
     });
@@ -80,8 +81,8 @@ describe("Cells Neighbours", function() {
             spyOn(car, "currentSpeed").and.returnValue(5);
             spyOn(car, "frontCell").and.returnValue(new Cell(carParamerers.frontCellId));
             spyOn(car, "currentLaneId").and.returnValue(2);
-            car.setDestinationExit(carParamerers.destinationRoadId);
-            car.setDestinationExitLaneId(0);
+            var path = new Path(null, null, null, carParamerers.destinationRoadId, 0);
+            car.setPath(path);
             expect(cellsNeighbours.isApproachingExit(car)).toBe(true);
         });
     });
@@ -99,8 +100,8 @@ describe("Cells Neighbours", function() {
             spyOn(car, "currentSpeed").and.returnValue(5);
             spyOn(car, "frontCell").and.returnValue(new Cell(carParamerers.frontCellId));
             spyOn(car, "currentLaneId").and.returnValue(2);
-            car.setDestinationExit(carParamerers.destinationRoadId);
-            car.setDestinationExitLaneId(0);
+            var path = new Path(null, null, null, carParamerers.destinationRoadId, 0);
+            car.setPath(path);
             expect(cellsNeighbours.isApproachingExit(car)).toBe(false);
         });
     });
@@ -109,8 +110,8 @@ describe("Cells Neighbours", function() {
         var outerCellsLane = CellsLane.newLane(1, 80);
         var cellsNeighbours = new CellsNeighbours([70, 80], 2, 14);
         var car1 = VehicleFactory.newCar(drivingRules);
-        car1.setDestinationExit(Direction.newNorth());
-        car1.setDestinationExitLaneId(0);
+        var path = new Path(null, null, null, Direction.newNorth(), 0);
+        car1.setPath(path);
         var vehicleCells = Array.from(range(16, car1.lengthCells()), cellNumber => {
             var cell = new Cell(cellNumber);
             cell.assignToLane(outerCellsLane);

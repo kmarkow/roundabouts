@@ -7,6 +7,7 @@ import CellsNeighbours from '../../src/Simulation/CellsNeighbours.js';
 import { range } from '../../src/JsWhyYouNoImplement.js';
 import Direction from '../../src/Simulation/Specification/Direction.js';
 import {DrivingRules} from '../../src/Simulation/DrivingRules.js';
+import Path from '../../src/Simulation/Path.js';
 
 describe("Test roundabout cells map", function() {
 
@@ -184,12 +185,9 @@ describe("Test roundabout cells map", function() {
         ];
 
         var truck = VehicleFactory.newTruck(drivingRules);
-        truck.setEntranceRoad(Direction.newNorth());
-        truck.setEntranceLaneId(1);
-        truck.setRoundaboutLaneId(0);
-        truck.setDestinationExit(Direction.newWest());
-        truck.setDestinationExitLaneId(0);
-        cellsMap.addVehicle(truck,  'N_ENTRANCE_1', 4);
+        var path = new Path(Direction.newNorth(), 1, 0, Direction.newWest(), 0);
+        truck.setPath(path);
+        cellsMap.addVehicle(truck,  'N_ENTRANCE_1', truck.lengthCells()-1);
 
         iterations.forEach(cellSpecification => {
             truck.moveToNextIteration(cellsMap, cellsNeighbours);
@@ -266,12 +264,9 @@ describe("Test roundabout cells map", function() {
         ];
 
         var car = VehicleFactory.newCar(drivingRules);
-        car.setEntranceRoad(Direction.newNorth());
-        car.setEntranceLaneId(1);
-        car.setRoundaboutLaneId(0);
-        car.setDestinationExit(Direction.newWest());
-        car.setDestinationExitLaneId(0);
-        cellsMap.addVehicle(car, 'N_ENTRANCE_1', 1);
+        var path = new Path(Direction.newNorth(), 1, 0, Direction.newWest(), 0);
+        car.setPath(path);
+        cellsMap.addVehicle(car, 'N_ENTRANCE_1', car.lengthCells() - 1);
 
         iterations.forEach(cellSpecification => {
             car.moveToNextIteration(cellsMap, cellsNeighbours);
@@ -284,13 +279,12 @@ describe("Test roundabout cells map", function() {
 
     it("vehicles will not crash if one going slow and another is approaching quickly", () => {
         var car = VehicleFactory.newCar(drivingRules);
-        car.setDestinationExit(Direction.newNorth());
-        car.setDestinationExitLaneId(0);
+        var path = new Path(null, null, null, Direction.newNorth(), 0);
+        car.setPath(path);
         cellsMap.addVehicle(car, 1, 40);
 
         var truck = VehicleFactory.newTruck(drivingRules);
-        truck.setDestinationExit(Direction.newNorth());
-        truck.setDestinationExitLaneId(0);
+        truck.setPath(path);
         cellsMap.addVehicle(truck, 1, 69);
 
         function nextIteration() {
@@ -308,8 +302,8 @@ describe("Test roundabout cells map", function() {
           2, 3, 4, 4, 3, 2, 2
         ];
         var car = VehicleFactory.newCar(drivingRules);
-        car.setDestinationExit(Direction.newNorth());
-        car.setDestinationExitLaneId(0);
+        var path = new Path(null, null, null, Direction.newNorth(), 0);
+        car.setPath(path);
         cellsMap.addVehicle(car, 1, 79);
 
         expectedSpeeds.forEach(expectedSpeed => {
@@ -323,14 +317,14 @@ describe("Test roundabout cells map", function() {
     });
 
     it('checks if a car is in right mirror before leaving roundabout', () => {
+        var path = new Path(null, null, null, Direction.newNorth(), 1);
+
         var car = VehicleFactory.newCar(drivingRules);
-        car.setDestinationExit(Direction.newNorth());
-        car.setDestinationExitLaneId(1);
+        car.setPath(path);
         cellsMap.addVehicle(car, 1, 16);
 
         var car2 = VehicleFactory.newCar(drivingRules);
-        car2.setDestinationExit(Direction.newNorth());
-        car2.setDestinationExitLaneId(1);
+        car2.setPath(path);
         cellsMap.addVehicle(car2, 0, 14);
 
         var cars = [car, car2];
@@ -353,14 +347,13 @@ describe("Test roundabout cells map", function() {
     });
 
     it('find vehicle on the right on roundabout', () => {
+        var path = new Path(null, null, null, Direction.newNorth(), 1);
         var car = VehicleFactory.newCar(drivingRules);
-        car.setDestinationExit(Direction.newNorth());
-        car.setDestinationExitLaneId(1);
+        car.setPath(path);
         cellsMap.addVehicle(car, 1, 16);
 
         var car2 = VehicleFactory.newCar(drivingRules);
-        car2.setDestinationExit(Direction.newNorth());
-        car2.setDestinationExitLaneId(1);
+        car2.setPath(path);
         cellsMap.addVehicle(car2, 0, 14);
 
         expect(cellsMap.vehicleOnTheRight(car2)).toBe(car);
@@ -368,19 +361,23 @@ describe("Test roundabout cells map", function() {
 
     it('find vehicle on the right on entrance', () => {
         var carOnRightLane = VehicleFactory.newCar(drivingRules);
-        carOnRightLane.setEntranceRoad(Direction.newNorth());
-        carOnRightLane.setEntranceLaneId(0);
-        carOnRightLane.setRoundaboutLaneId(0);
-        carOnRightLane.setDestinationExit(Direction.newNorth());
-        carOnRightLane.setDestinationExitLaneId(1);
+        carOnRightLane.setPath(new Path(
+            Direction.newNorth(),
+            0,
+            0,
+            Direction.newNorth(),
+            1
+        ));
         cellsMap.addVehicle(carOnRightLane, 'N_ENTRANCE_0', 13);
 
         var carOnLeftLane = VehicleFactory.newCar(drivingRules);
-        carOnLeftLane.setEntranceRoad(Direction.newNorth());
-        carOnLeftLane.setEntranceLaneId(1);
-        carOnLeftLane.setRoundaboutLaneId(0);
-        carOnLeftLane.setDestinationExit(Direction.newNorth());
-        carOnLeftLane.setDestinationExitLaneId(1);
+        carOnLeftLane.setPath(new Path(
+            Direction.newNorth(),
+            1,
+            0,
+            Direction.newNorth(),
+            1
+        ));
         cellsMap.addVehicle(carOnLeftLane, 'N_ENTRANCE_1', 13);
 
         expect(cellsMap.vehicleOnTheRight(carOnLeftLane)).toBe(carOnRightLane);
@@ -389,21 +386,25 @@ describe("Test roundabout cells map", function() {
 
     it('find vehicles on the left', () => {
         var carOnEntrance = VehicleFactory.newCar(drivingRules);
-        carOnEntrance.setEntranceRoad(Direction.newNorth());
-        carOnEntrance.setEntranceLaneId(1);
-        carOnEntrance.setRoundaboutLaneId(0);
-        carOnEntrance.setDestinationExit(Direction.newNorth());
-        carOnEntrance.setDestinationExitLaneId(1);
+        carOnEntrance.setPath(new Path(
+            Direction.newNorth(),
+            1,
+            0,
+            Direction.newNorth(),
+            1
+        ));
         cellsMap.addVehicle(carOnEntrance, 'N_ENTRANCE_1', 13);
 
         var carOnOuterLane = VehicleFactory.newCar(drivingRules);
-        carOnOuterLane.setDestinationExit(Direction.newWest());
-        carOnOuterLane.setDestinationExitLaneId(0);
+        carOnOuterLane.setPath(new Path(
+            null, null, null, Direction.newWest(), 0
+        ));
         cellsMap.addVehicle(carOnOuterLane, 1, 19);
 
         var carOnMiddleLane = VehicleFactory.newCar(drivingRules);
-        carOnMiddleLane.setDestinationExit(Direction.newWest());
-        carOnMiddleLane.setDestinationExitLaneId(1);
+        carOnMiddleLane.setPath(new Path(
+            null, null, null, Direction.newWest(), 0
+        ));
         cellsMap.addVehicle(carOnMiddleLane, 0, 16);
 
         var vehiclesOnTheLeft = cellsMap.vehiclesOnTheLeft(carOnEntrance, cellsNeighbours);
@@ -414,11 +415,9 @@ describe("Test roundabout cells map", function() {
 
     it('return empty map when there are none vehicles on the left', () => {
         var carOnEntrance = VehicleFactory.newCar(drivingRules);
-        carOnEntrance.setEntranceRoad(Direction.newNorth());
-        carOnEntrance.setEntranceLaneId(1);
-        carOnEntrance.setRoundaboutLaneId(0);
-        carOnEntrance.setDestinationExit(Direction.newNorth());
-        carOnEntrance.setDestinationExitLaneId(1);
+        carOnEntrance.setPath(new Path(
+            Direction.newNorth(), 1, 0, Direction.newNorth(), 1
+        ));
         cellsMap.addVehicle(carOnEntrance, 'N_ENTRANCE_1', 13);
 
         var vehiclesOnTheLeft = cellsMap.vehiclesOnTheLeft(carOnEntrance, cellsNeighbours);
