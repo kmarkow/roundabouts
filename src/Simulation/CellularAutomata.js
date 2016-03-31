@@ -3,6 +3,7 @@ import VehicleFactory from './VehicleFactory.js';
 import {ExitRoadEnd} from './CellsMap.js';
 import Direction from './Specification/Direction.js';
 import { range } from '../JsWhyYouNoImplement.js';
+import Path from './Path.js';
 
 class VehicleQueue {
     constructor() {
@@ -56,6 +57,20 @@ class CellularAutomata {
             VehicleFactory.newTruck(this._drivingRules),
             VehicleFactory.newTruck(this._drivingRules),
         ];
+        //vehicles[0].setPath(new Path(
+        //    Direction.newNorth(),
+        //    1,
+        //    1,
+        //    Direction.newWest(),
+        //    1
+        //));
+        //vehicles[1].setPath(new Path(
+        //    Direction.newNorth(),
+        //    0,
+        //    0,
+        //    Direction.newWest(),
+        //    1
+        //));
         vehicles.forEach(vehicle => {
             vehicle.setPath(drivingRules.randomPath());
         });
