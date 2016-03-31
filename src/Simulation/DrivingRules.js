@@ -50,7 +50,10 @@ class EntranceRule1 {
     }
 
     shouldYieldTo(vehicle, another_vehicle) {
-        if (this._isEnteringRoundabout(vehicle) && this._isOnRoundabout(another_vehicle)) {
+        if (this._isTakingExitRightBeforeEntrance(vehicle, another_vehicle)) {
+            return false;
+        }
+        if (vehicle.isEnteringRoundabout() && another_vehicle.isOnRoundabout()) {
             return this._isCrossingRoundaboutLaneOf(vehicle, another_vehicle);
         }
         if (this._bothAreEntering(vehicle, another_vehicle)) {
@@ -60,17 +63,13 @@ class EntranceRule1 {
         throw new Error("Entrance Rule 1 unknown situation");
     }
 
-    _bothAreEntering(vehicle, another_vehicle) {
-        return vehicle.frontCell().parentLane().isEntranceLane() &&
-            another_vehicle.frontCell().parentLane().isEntranceLane();
+    _isTakingExitRightBeforeEntrance(vehicle, another_vehicle) {
+        return vehicle.entranceRoadId() == another_vehicle.destinationExit();
     }
 
-   _isOnRoundabout(vehicle) {
-       return vehicle.frontCell().parentLane().isRoundaboutLane();
-   }
-
-    _isEnteringRoundabout(vehicle) {
-        return vehicle.frontCell().parentLane().isEntranceLane();
+    _bothAreEntering(vehicle, another_vehicle) {
+        return vehicle.isEnteringRoundabout() &&
+            another_vehicle.isEnteringRoundabout();
     }
 
     _isCrossingRoundaboutLaneOf(vehicle, another_vehicle) {

@@ -159,6 +159,18 @@ class Vehicle {
         return this._id;
     }
 
+    isOnRoundabout() {
+        return this.currentCells().every(cell => {
+            return cell.parentLane().isRoundaboutLane();
+        });
+    }
+
+    isEnteringRoundabout() {
+        return this.currentCells().some(cell => {
+                return cell.parentLane().isEntranceLane();
+            });
+    }
+
     _isMovingWithMaxSpeed() {
         return this._currentSpeed == this._maxSpeed;
     }

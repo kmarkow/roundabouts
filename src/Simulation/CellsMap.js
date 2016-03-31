@@ -95,7 +95,7 @@ class CellsMap extends Observable {
     exitLaneEmpty(vehicle, numberOfCellsToCheck) {
         var exitLaneId = vehicle.destinationExit() + "_EXIT_" + vehicle.destinationExitLaneId().toString();
         var exitLane = this._lanes.get(exitLaneId);
-        var exitLaneFirstCells = exitLane.firstCells(numberOfCellsToCheck);
+        var exitLaneFirstCells = exitLane.firstCells(numberOfCellsToCheck+1);
         return exitLaneFirstCells.every(cell => {
             return cell.isEmpty() || cell.vehicle() == vehicle
         });

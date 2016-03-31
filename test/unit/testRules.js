@@ -23,6 +23,8 @@ describe("Rule", function() {
         car_outer_lane.setPath(path);
         spyOn(car_outer_lane, "currentLaneId").and.returnValue(1);
         spyOn(car_outer_lane, "frontCell").and.returnValue(fakeLane(1));
+        spyOn(car_outer_lane, "isOnRoundabout").and.returnValue(true);
+        spyOn(car_outer_lane, "isEnteringRoundabout").and.returnValue(false);
         return car_outer_lane;
     }
 
@@ -32,6 +34,8 @@ describe("Rule", function() {
         car_middle_lane.setPath(path);
         spyOn(car_middle_lane, "currentLaneId").and.returnValue(0);
         spyOn(car_middle_lane, "frontCell").and.returnValue(fakeLane(0));
+        spyOn(car_middle_lane, "isOnRoundabout").and.returnValue(true);
+        spyOn(car_middle_lane, "isEnteringRoundabout").and.returnValue(false);
         return car_middle_lane;
     }
 
@@ -44,6 +48,8 @@ describe("Rule", function() {
         spyOn(car, "frontCell").and.returnValue(
             fakeLane(`${car.entranceRoadId()}_ENTRANCE_${entranceLaneId}`, false)
         );
+        spyOn(car, "isOnRoundabout").and.returnValue(false);
+        spyOn(car, "isEnteringRoundabout").and.returnValue(true);
         return car;
     }
 
