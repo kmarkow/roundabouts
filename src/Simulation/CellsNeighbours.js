@@ -19,9 +19,9 @@ class CellsNeighbours  {
         this._entrances = new Map();
         ["N", "W", "S", "E"].forEach((direction, multiplier) => {
             roundaboutLaneCellsCount.forEach((laneCellsCount, roundaboutLaneId) => {
-                var roadEvery = Math.floor(laneCellsCount / 4);
+                var roadEvery = Math.round(laneCellsCount / 4);
                 range(0, entranceLanesCount).forEach(entranceLaneId => {
-                    var value = roadEvery * (multiplier + 1) - entranceLaneId + 1;
+                    var value = roadEvery * (multiplier + 1) -entranceLaneId + 2*roundaboutLaneId;
                     if (value >= laneCellsCount) {
                         value = value - laneCellsCount;
                     }

@@ -43,8 +43,8 @@ describe("Cells Neighbours", function() {
 
     it('accurately returns entrance cells', () => {
         var cellsNeighbours = new CellsNeighbours([70, 80], 2, 14);
-        expect(cellsNeighbours.firstCellNumberOnEntrance('N', 1, 1)).toEqual(20);
-        expect(cellsNeighbours.firstCellNumberOnEntrance('N', 0, 1)).toEqual(21);
+        expect(cellsNeighbours.firstCellNumberOnEntrance('N', 1, 1)).toEqual(21);
+        expect(cellsNeighbours.firstCellNumberOnEntrance('N', 0, 1)).toEqual(22);
         expect(cellsNeighbours.firstCellNumberOnEntrance('N', 1, 0)).toEqual(17);
         expect(cellsNeighbours.firstCellNumberOnEntrance('N', 0, 0)).toEqual(18);
     });
