@@ -1,17 +1,44 @@
 import Vehicle from './Vehicle.js';
 import VehicleFactory from './VehicleFactory.js';
 import {ExitRoadEnd} from './CellsMap.js';
-import RandomNumberGenerator from './RandomNumberGenerator.js';
 import Direction from './Specification/Direction.js';
+import { range } from '../JsWhyYouNoImplement.js';
+
+class VehicleQueue {
+    constructor() {
+        this._vehicles = [];
+    }
+
+    addVehicle(vehicle) {
+        this._vehicles.push(vehicle);
+    }
+
+    nextVehicle() {
+        return this._vehicles.pop();
+    }
+}
 
 class CellularAutomata {
 
-    constructor(cellsMap, cellsNeighbours, drivingRules) {
+    constructor(cellsMap, cellsNeighbours, drivingRules, ingoingLanesCount) {
         this._cellsMap = cellsMap;
         this._cellsNeighbours = cellsNeighbours;
         this._drivingRules = drivingRules;
-        var randomNumberGenerator = new RandomNumberGenerator();
-        this._vehicles = [
+        this._vehicles = [];
+        
+        var vehicles = [
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
             VehicleFactory.newCar(this._drivingRules),
             VehicleFactory.newCar(this._drivingRules),
             VehicleFactory.newCar(this._drivingRules),
@@ -20,20 +47,44 @@ class CellularAutomata {
             VehicleFactory.newCar(this._drivingRules),
             VehicleFactory.newCar(this._drivingRules),
             VehicleFactory.newVan(this._drivingRules),
-            VehicleFactory.newTruck(this._drivingRules)
+            VehicleFactory.newVan(this._drivingRules),
+            VehicleFactory.newVan(this._drivingRules),
+            VehicleFactory.newTruck(this._drivingRules),
+            VehicleFactory.newTruck(this._drivingRules),
+            VehicleFactory.newTruck(this._drivingRules),
+            VehicleFactory.newTruck(this._drivingRules),
+            VehicleFactory.newTruck(this._drivingRules),
+            VehicleFactory.newTruck(this._drivingRules),
         ];
-
-        this._vehicles.forEach(vehicle => {
+        vehicles.forEach(vehicle => {
             vehicle.setPath(drivingRules.randomPath());
-            this._cellsMap.addVehicle(
-                vehicle,
-                `${vehicle.entranceRoadId()}_ENTRANCE_${vehicle.entranceLaneId()}`,
-                randomNumberGenerator.intFromTo(vehicle.lengthCells(), 13-vehicle.lengthCells())
-            );
         });
+
+
+        this._vehiclesQueues = new Map();
+        Direction.allDirections().forEach(entranceRoadDirection => {
+            range(0, ingoingLanesCount).forEach(entranceLaneId => {
+                this._vehiclesQueues.set(
+                    `${entranceRoadDirection.id()}_ENTRANCE_${entranceLaneId}`,
+                    new VehicleQueue()
+                );
+            });
+        });
+
+        vehicles.forEach(vehicle => {
+            var queue = this._vehiclesQueues.get(`${vehicle.entranceRoadId()}_ENTRANCE_${vehicle.entranceLaneId()}`);
+            queue.addVehicle(vehicle);
+        });
+        this._addVehiclesFromQueue();
     }
 
     nextIteration() {
+        this._moveVehicles();
+        this._addVehiclesFromQueue();
+        this._cellsMap.notifyAll();
+    }
+
+    _moveVehicles() {
         this._vehicles.forEach(vehicle => {
             try {
                 vehicle.moveToNextIteration(this._cellsMap, this._cellsNeighbours);
@@ -46,7 +97,20 @@ class CellularAutomata {
                 }
             }
         });
-        this._cellsMap.notifyAll();
+    }
+
+    _addVehiclesFromQueue() {
+        this._vehiclesQueues.forEach((queue, queueLane) => {
+            var vehicle = queue.nextVehicle();
+            if (vehicle) {
+                if (this._cellsMap.nothingOnEntrance(queueLane, vehicle.lengthCells())) {
+                    this._vehicles.push(vehicle);
+                    this._cellsMap.addVehicle(vehicle, queueLane, vehicle.lengthCells() - 1);
+                } else {
+                    queue.addVehicle(vehicle);
+                }
+            }
+        });
     }
 }
 

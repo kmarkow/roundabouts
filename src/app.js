@@ -54,10 +54,14 @@ var cellsNeighbours = new CellsNeighbours(
 );
 
 let drivingRules = DrivingRules.newRules1(roundaboutBukowe.lanesCount());
-let cellularAutomata = new CellularAutomata(roundaboutBukoweCellsMap, cellsNeighbours, drivingRules);
+let cellularAutomata = new CellularAutomata(
+    roundaboutBukoweCellsMap,
+    cellsNeighbours,
+    drivingRules,
+    roundaboutBukowe.adherentLanesCount() / 2
+);
 
 roundaboutDrawer.draw();
 setInterval(() => {
     cellularAutomata.nextIteration();
 }, 1000);
-

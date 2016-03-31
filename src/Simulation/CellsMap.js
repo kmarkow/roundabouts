@@ -84,6 +84,14 @@ class CellsMap extends Observable {
         });
     }
 
+    nothingOnEntrance(entranceLaneId, numberOfCellsToCheck) {
+        var entranceLane = this._lanes.get(entranceLaneId);
+        var nextCells = entranceLane.cellsNextToNumber(0, numberOfCellsToCheck);
+        return nextCells.every(cell => {
+            return cell.isEmpty()
+        });
+    }
+
     exitLaneEmpty(vehicle, numberOfCellsToCheck) {
         var exitLaneId = vehicle.destinationExit() + "_EXIT_" + vehicle.destinationExitLaneId().toString();
         var exitLane = this._lanes.get(exitLaneId);
