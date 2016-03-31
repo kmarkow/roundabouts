@@ -9,7 +9,7 @@ import CellsNeighbours from './Simulation/CellsNeighbours.js';
 import {DrivingRules} from './Simulation/DrivingRules.js';
 
 let unitConverter = new UnitConverter(
-    roundaboutThreeLanes.roundaboutDiameter() + roundaboutThreeLanes.adherentRoadLength() * 2,
+    roundaboutBukowe.roundaboutDiameter() + roundaboutBukowe.adherentRoadLength() * 2,
     Math.min(window.innerWidth, window.innerHeight)
 );
 
@@ -53,7 +53,10 @@ var cellsNeighbours = new CellsNeighbours(
     unitConverter.metersAsCells(roundaboutBukowe.adherentRoadLength())
 );
 
-let drivingRules = DrivingRules.newRules1(roundaboutBukowe.lanesCount());
+let drivingRules = DrivingRules.newRules1(
+    roundaboutBukowe.lanesCount(),
+    roundaboutBukowe.adherentLanesCount()
+);
 let cellularAutomata = new CellularAutomata(
     roundaboutBukoweCellsMap,
     cellsNeighbours,

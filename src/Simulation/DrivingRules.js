@@ -83,8 +83,9 @@ class EntranceRule1 {
 }
 
 class DrivingRules {
-    constructor(roundaboutLanesCount, entranceRules, exitRules) {
+    constructor(roundaboutLanesCount, adherentRoadLanesCount, entranceRules, exitRules) {
         this.roundaboutLanesCount = roundaboutLanesCount;
+        this._entrancesExitsLanesCount = adherentRoadLanesCount/2;
         this.entranceRules = entranceRules;
         this.exitRules = exitRules;
     }
@@ -95,9 +96,9 @@ class DrivingRules {
         var exitRoad = allDirections[Math.floor(Math.random()*allDirections.length)];
 
         var randomNumberGenerator = new RandomNumberGenerator();
-        var entranceLaneId = randomNumberGenerator.intFromTo(0, 1);
-        var roundaboutLaneId = randomNumberGenerator.intFromTo(0, 1);
-        var destinationExitLaneId = randomNumberGenerator.intFromTo(0, 1);
+        var entranceLaneId = randomNumberGenerator.intFromTo(0, this._entrancesExitsLanesCount - 1);
+        var roundaboutLaneId = randomNumberGenerator.intFromTo(0, this.roundaboutLanesCount - 1);
+        var destinationExitLaneId = randomNumberGenerator.intFromTo(0, this._entrancesExitsLanesCount - 1);
 
         return new Path(
             entranceRoad,
@@ -108,9 +109,10 @@ class DrivingRules {
         );
     }
 
-    static newRules1(roundaboutLanesCount) {
+    static newRules1(roundaboutLanesCount, adherentRoadLanesCount) {
         return new DrivingRules(
             roundaboutLanesCount,
+            adherentRoadLanesCount,
             new EntranceRule1(roundaboutLanesCount),
             new ExitRule1(roundaboutLanesCount)
         );
