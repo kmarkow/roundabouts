@@ -53,7 +53,7 @@ var cellsNeighbours = new CellsNeighbours(
     unitConverter.metersAsCells(roundaboutBukowe.adherentRoadLength())
 );
 
-let drivingRules = DrivingRules.newRules1(
+let drivingRules = DrivingRules.newRules4(
     roundaboutBukowe.lanesCount(),
     roundaboutBukowe.adherentLanesCount()
 );
