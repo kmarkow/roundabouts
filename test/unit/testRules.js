@@ -1,6 +1,8 @@
 import Direction from '../../src/Simulation/Specification/Direction.js';
-import {DrivingRules, ExitRule1} from '../../src/Simulation/DrivingRules.js';
-import {CurrentRules} from '../../src/Simulation/EntranceRules.js';
+import {DrivingRules} from '../../src/Simulation/DrivingRules.js';
+import {CurrentRules as CurrentEntranceRules} from '../../src/Simulation/EntranceRules.js';
+import {SuggestedRules as SuggestedEntranceRules} from '../../src/Simulation/EntranceRules.js';
+import {CurrentRules as CurrentExitRules} from '../../src/Simulation/ExitRules.js';
 import VehicleFactory from '../../src/Simulation/VehicleFactory.js'
 import CellsLane from '../../src/Simulation/CellsLane.js';
 import Path from '../../src/Simulation/Path.js';
@@ -8,7 +10,8 @@ import Path from '../../src/Simulation/Path.js';
 describe("Rule", function() {
 
     var drivingRules;
-    const LANES_COUNT = 2;
+    const TWO_LANE_ROUNDABOUT = 2;
+    const THREE_LANE_ROUNDABOUT = 3;
 
     beforeEach(()=>{
         drivingRules = DrivingRules.newRules1(2);
@@ -55,7 +58,7 @@ describe("Rule", function() {
     }
 
     it('exit rule #1 middle-left yields to outer-left', () => {
-        var exitRules = new ExitRule1(LANES_COUNT);
+        var exitRules = new CurrentExitRules(TWO_LANE_ROUNDABOUT);
         var cars_exit = Direction.newNorth();
         var car_outer_lane = givenCarOnOuterLane(cars_exit);
         var car_middle_lane = givenCarOnMiddleLane(cars_exit);
@@ -65,7 +68,7 @@ describe("Rule", function() {
     });
 
     it('exit rule #1 middle-left yields to outer-outer', () => {
-        var exitRules = new ExitRule1(LANES_COUNT);
+        var exitRules = new CurrentExitRules(TWO_LANE_ROUNDABOUT);
         var north_exit = Direction.newNorth();
         var west_exit = Direction.newWest();
         var car_outer_lane = givenCarOnOuterLane(west_exit);
@@ -76,7 +79,7 @@ describe("Rule", function() {
     });
 
     it('exit rule #1 middle-left does not yield to outer-right', () => {
-        var exitRules = new ExitRule1(LANES_COUNT);
+        var exitRules = new CurrentExitRules(TWO_LANE_ROUNDABOUT);
         var cars_exit = Direction.newNorth();
         var car_outer_lane = givenCarOnOuterLane(cars_exit, 1);
         var car_middle_lane = givenCarOnMiddleLane(cars_exit, 0);
@@ -86,7 +89,7 @@ describe("Rule", function() {
     });
 
     it('entrance rule #1 right-outer yields to outer-outer and does not yield to middle-middle', () => {
-        var entranceRule = new CurrentRules(LANES_COUNT);
+        var entranceRule = new CurrentEntranceRules(TWO_LANE_ROUNDABOUT);
         var car_outer_lane = givenCarOnOuterLane(Direction.newWest(), 1);
         var car_middle_lane = givenCarOnMiddleLane(Direction.newWest(), 1);
         var car_on_north_entrance = givenCarOnEntrance(0, 1, 0);
@@ -96,7 +99,7 @@ describe("Rule", function() {
     });
 
     it('entrance rule #1 right-middle yields', () => {
-        var entranceRule = new CurrentRules(LANES_COUNT);
+        var entranceRule = new CurrentEntranceRules(TWO_LANE_ROUNDABOUT);
         var car_outer_lane = givenCarOnOuterLane(Direction.newWest(), 1);
         var car_middle_lane = givenCarOnMiddleLane(Direction.newWest(), 1);
         var car_on_right_lane = givenCarOnEntrance(0, 0, 0);
@@ -106,7 +109,7 @@ describe("Rule", function() {
     });
 
     it('entrance rule #1 left-middle yields', () => {
-        var entranceRule = new CurrentRules(LANES_COUNT);
+        var entranceRule = new CurrentEntranceRules(TWO_LANE_ROUNDABOUT);
         var car_outer_lane = givenCarOnOuterLane(Direction.newWest(), 1);
         var car_middle_lane = givenCarOnMiddleLane(Direction.newWest(), 1);
         var car_on_left_lane = givenCarOnEntrance(1, 0, 1);
@@ -120,7 +123,7 @@ describe("Rule", function() {
     });
 
     it('entrance rule #1 left-outer yields', () => {
-        var entranceRule = new CurrentRules(LANES_COUNT);
+        var entranceRule = new CurrentEntranceRules(TWO_LANE_ROUNDABOUT);
         var car_outer_lane = givenCarOnOuterLane(Direction.newWest(), 1);
         var car_middle_lane = givenCarOnMiddleLane(Direction.newWest(), 1);
         var car_on_left_lane = givenCarOnEntrance(1, 1, 1);
@@ -131,5 +134,26 @@ describe("Rule", function() {
         expect(entranceRule.shouldYieldTo(car_on_left_lane, car_on_right_lane)).toBe(true);
         expect(entranceRule.shouldYieldTo(car_on_left_lane, car_on_right_lane_entering_the_same_lane)).toBe(true);
         expect(entranceRule.shouldYieldTo(car_on_left_lane, car_middle_lane)).toBe(false);
+    });
+
+
+    it('current entrance rules let you take any lane', () => {
+        var currentRules = new CurrentEntranceRules(TWO_LANE_ROUNDABOUT);
+        expect(currentRules.possibleRoundaboutLanesFrom(0)).toEqual([0, 1]);
+        expect(currentRules.possibleRoundaboutLanesFrom(1)).toEqual([0, 1]);
+
+        var currentRules = new CurrentEntranceRules(THREE_LANE_ROUNDABOUT);
+        expect(currentRules.possibleRoundaboutLanesFrom(0)).toEqual([0, 1, 2]);
+        expect(currentRules.possibleRoundaboutLanesFrom(1)).toEqual([0, 1, 2]);
+    });
+
+    it('suggested entrance rules each car keeps going its lane', () => {
+        var suggestedRules = new SuggestedEntranceRules(TWO_LANE_ROUNDABOUT);
+        expect(suggestedRules.possibleRoundaboutLanesFrom(0)).toEqual([1]);
+        expect(suggestedRules.possibleRoundaboutLanesFrom(1)).toEqual([0]);
+
+        var suggestedRules = new SuggestedEntranceRules(THREE_LANE_ROUNDABOUT);
+        expect(suggestedRules.possibleRoundaboutLanesFrom(0)).toEqual([1, 2]);
+        expect(suggestedRules.possibleRoundaboutLanesFrom(1)).toEqual([0, 1]);
     });
 });

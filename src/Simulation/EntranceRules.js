@@ -1,3 +1,5 @@
+import {range} from '../JsWhyYouNoImplement.js';
+
 class EntranceRule {
 
     constructor(numberOfRoundaboutLanes) {
@@ -38,11 +40,20 @@ class EntranceRule {
 
 
 class CurrentRules extends EntranceRule {
-
+    possibleRoundaboutLanesFrom(laneId) {
+        return range(0, this._numberOfRoundaboutLanes);
+    }
 }
 
 class SuggestedRules extends EntranceRule {
-
+    possibleRoundaboutLanesFrom(laneId) {
+        if (this._numberOfRoundaboutLanes == 2) {
+            return [1-laneId];
+        }
+        if (this._numberOfRoundaboutLanes == 3) {
+            return [1-laneId, 1-laneId+1]
+        }
+    }
 }
 
 export {CurrentRules, SuggestedRules};

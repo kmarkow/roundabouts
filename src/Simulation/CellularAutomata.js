@@ -47,6 +47,8 @@ class CellularAutomata {
             VehicleFactory.newCar(this._drivingRules),
             VehicleFactory.newCar(this._drivingRules),
             VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
+            VehicleFactory.newCar(this._drivingRules),
             VehicleFactory.newVan(this._drivingRules),
             VehicleFactory.newVan(this._drivingRules),
             VehicleFactory.newVan(this._drivingRules),
