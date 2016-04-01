@@ -85,7 +85,7 @@ class Vehicle {
 
         //Taking exit
         if(cellsNeighbours.approachedExit(this)) {
-            if (!cellsMap.exitLaneEmpty(this, this._currentSpeed)) {
+            if (!cellsMap.exitLaneEmpty(this, this.maxSpeedWhenTurning())) {
                 this._stop();
                 return;
             }

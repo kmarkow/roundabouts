@@ -17,62 +17,25 @@ class VehicleQueue {
     nextVehicle() {
         return this._vehicles.pop();
     }
+
+    isEmpty() {
+        return this._vehicles.length == 0;
+    }
 }
 
 class CellularAutomata {
 
     constructor(cellsMap, cellsNeighbours, drivingRules, ingoingLanesCount) {
+        this._iterations = 0;
         this._cellsMap = cellsMap;
         this._cellsNeighbours = cellsNeighbours;
         this._drivingRules = drivingRules;
         this._vehicles = [];
-        
-        var vehicles = [
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newCar(this._drivingRules),
-            VehicleFactory.newVan(this._drivingRules),
-            VehicleFactory.newVan(this._drivingRules),
-            VehicleFactory.newVan(this._drivingRules),
-            VehicleFactory.newTruck(this._drivingRules),
-            VehicleFactory.newTruck(this._drivingRules),
-            VehicleFactory.newTruck(this._drivingRules),
-            VehicleFactory.newTruck(this._drivingRules),
-            VehicleFactory.newTruck(this._drivingRules),
-            VehicleFactory.newTruck(this._drivingRules),
-        ];
-        //vehicles[0].setPath(new Path(
-        //    Direction.newNorth(),
-        //    1,
-        //    1,
-        //    Direction.newWest(),
-        //    1
-        //));
-        //vehicles[1].setPath(new Path(
-        //    Direction.newNorth(),
-        //    0,
-        //    0,
-        //    Direction.newWest(),
-        //    1
-        //));
+
+        var vehicles = [];
+        range(0, 500).forEach(() => {
+            vehicles.push(VehicleFactory.newCar(this._drivingRules));
+        });
         vehicles.forEach(vehicle => {
             vehicle.setPath(drivingRules.randomPath());
         });
@@ -96,9 +59,22 @@ class CellularAutomata {
     }
 
     nextIteration() {
+        this._iterations++;
         this._moveVehicles();
         this._addVehiclesFromQueue();
         this._cellsMap.notifyAll();
+    }
+
+    hasFinished() {
+        var allQueuesEmpty = Array.from(this._vehiclesQueues.values()).every(queue => {
+           return queue.isEmpty();
+        });
+        var allVehiclesLeft = this._vehicles.length == 0;
+        return allVehiclesLeft && allQueuesEmpty;
+    }
+
+    iterations() {
+        return this._iterations;
     }
 
     _moveVehicles() {
