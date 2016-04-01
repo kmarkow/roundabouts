@@ -1,4 +1,4 @@
-class ExitRule1 {
+class ExitRules {
     constructor(numberOfRoundaboutLanes) {
         this._numberOfRoundaboutLanes = numberOfRoundaboutLanes;
     }
@@ -36,14 +36,44 @@ class ExitRule1 {
     _isOnOuterLane(vehicle) {
         return vehicle.currentLaneId() + 1 == this._numberOfRoundaboutLanes;
     }
+
+    _isOuterLane(laneId) {
+        return this._numberOfRoundaboutLanes - 1 == laneId;
+    }
+
+    _isMiddleLane(laneId) {
+        if (this._numberOfRoundaboutLanes == 2 && laneId == 0) {
+            return true;
+        }
+        if (this._numberOfRoundaboutLanes == 3 && laneId == 1) {
+            return true;
+        }
+        return false;
+    }
 }
 
-class CurrentRules extends ExitRule1 {
-
+class CurrentRules extends ExitRules {
+    possibleExitLanesFrom(roundaboutLane) {
+        if (this._isOuterLane(roundaboutLane)) {
+            return [0, 1];
+        }
+        if (this._isMiddleLane(roundaboutLane)) {
+            return [1];
+        }
+        return [];
+    }
 }
 
-class SuggestedRules extends ExitRule1 {
-
+class SuggestedRules extends ExitRules {
+    possibleExitLanesFrom(roundaboutLane) {
+        if (this._isOuterLane(roundaboutLane)) {
+            return [0];
+        }
+        if (this._isMiddleLane(roundaboutLane)) {
+            return [1];
+        }
+        return [];
+    }
 }
 
 export {CurrentRules, SuggestedRules};

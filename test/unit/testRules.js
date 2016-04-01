@@ -3,6 +3,7 @@ import {DrivingRules} from '../../src/Simulation/DrivingRules.js';
 import {CurrentRules as CurrentEntranceRules} from '../../src/Simulation/EntranceRules.js';
 import {SuggestedRules as SuggestedEntranceRules} from '../../src/Simulation/EntranceRules.js';
 import {CurrentRules as CurrentExitRules} from '../../src/Simulation/ExitRules.js';
+import {SuggestedRules as SuggestedExitRules} from '../../src/Simulation/ExitRules.js';
 import VehicleFactory from '../../src/Simulation/VehicleFactory.js'
 import CellsLane from '../../src/Simulation/CellsLane.js';
 import Path from '../../src/Simulation/Path.js';
@@ -136,6 +137,27 @@ describe("Rule", function() {
         expect(entranceRule.shouldYieldTo(car_on_left_lane, car_middle_lane)).toBe(false);
     });
 
+    it('current exit rules let you take any lane from outer and left from middle', () => {
+        var currentRules = new CurrentExitRules(TWO_LANE_ROUNDABOUT);
+        expect(currentRules.possibleExitLanesFrom(1)).toEqual([0, 1]);
+        expect(currentRules.possibleExitLanesFrom(0)).toEqual([1]);
+
+        var currentRules = new CurrentExitRules(THREE_LANE_ROUNDABOUT);
+        expect(currentRules.possibleExitLanesFrom(2)).toEqual([0, 1]);
+        expect(currentRules.possibleExitLanesFrom(1)).toEqual([1]);
+        expect(currentRules.possibleExitLanesFrom(0)).toEqual([]);
+    });
+
+    it('suggested exit rules let you take right lane from outer and left from middle', () => {
+        var suggestedRules = new SuggestedExitRules(TWO_LANE_ROUNDABOUT);
+        expect(suggestedRules.possibleExitLanesFrom(1)).toEqual([0]);
+        expect(suggestedRules.possibleExitLanesFrom(0)).toEqual([1]);
+
+        var suggestedRules = new SuggestedExitRules(THREE_LANE_ROUNDABOUT);
+        expect(suggestedRules.possibleExitLanesFrom(2)).toEqual([0]);
+        expect(suggestedRules.possibleExitLanesFrom(1)).toEqual([1]);
+        expect(suggestedRules.possibleExitLanesFrom(0)).toEqual([]);
+    });
 
     it('current entrance rules let you take any lane', () => {
         var currentRules = new CurrentEntranceRules(TWO_LANE_ROUNDABOUT);
