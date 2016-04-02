@@ -10,7 +10,7 @@ module.exports = function(grunt) {
                     "src/roundabouts.js": "src/app.js",
                     "src/cli_measure_island_diameter.js": "src/measure_island_diameter.js",
                     "src/cli_measure_rules.js": "src/measure_rules.js",
-                    "src/cli_measure_track_ratio.js": "src/measure_track_ratio.js"
+                    "src/cli_measure_truck_ratio.js": "src/measure_truck_ratio.js"
                 }
             }
         },
