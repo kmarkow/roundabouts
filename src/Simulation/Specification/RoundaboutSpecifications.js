@@ -155,4 +155,4 @@ var roundaboutThreeLanes = new RoundaboutSpecification(
     }
 );
 
-export {roundaboutBukowe, roundaboutThreeLanes};
+export {roundaboutBukowe, roundaboutThreeLanes, RoundaboutSpecification};

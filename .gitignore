@@ -4,3 +4,4 @@ node_modules
 public/*
 src/roundabouts.js
 deploy.sh
+src/cli_*

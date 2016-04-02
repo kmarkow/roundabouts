@@ -25,7 +25,7 @@ class VehicleQueue {
 
 class CellularAutomata {
 
-    constructor(cellsMap, cellsNeighbours, drivingRules, ingoingLanesCount) {
+    constructor(cellsMap, cellsNeighbours, drivingRules, ingoingLanesCount, truckRatio=0) {
         this._iterations = 0;
         this._cellsMap = cellsMap;
         this._cellsNeighbours = cellsNeighbours;
@@ -33,8 +33,11 @@ class CellularAutomata {
         this._vehicles = [];
 
         var vehicles = [];
-        range(0, 500).forEach(() => {
+        range(0, Math.round(500*(1-truckRatio))).forEach(() => {
             vehicles.push(VehicleFactory.newCar(this._drivingRules));
+        });
+        range(0, Math.round(500*truckRatio)).forEach(() => {
+            vehicles.push(VehicleFactory.newTruck(this._drivingRules));
         });
         vehicles.forEach(vehicle => {
             vehicle.setPath(drivingRules.randomPath());
@@ -78,18 +81,19 @@ class CellularAutomata {
     }
 
     _moveVehicles() {
-        this._vehicles.forEach(vehicle => {
+        for (var i=0; i<this._vehicles.length; i++) {
+            var vehicle = this._vehicles[i];
             try {
                 vehicle.moveToNextIteration(this._cellsMap, this._cellsNeighbours);
             } catch (e) {
                 if (e instanceof ExitRoadEnd) {
                     vehicle.remove();
-                    this._vehicles.splice(this._vehicles.indexOf(vehicle), 1);
+                    this._vehicles.splice(i, 1);
                 } else {
                     throw e;
                 }
             }
-        });
+        }
     }
 
     _addVehiclesFromQueue() {
