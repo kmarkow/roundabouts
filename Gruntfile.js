@@ -28,7 +28,11 @@ module.exports = function(grunt) {
         },
         watch: {
             scripts: {
-                files: "src/**/*.js",
+                files: [
+                        "src/**/*.js",
+                        "!src/roundabouts.js",
+                        "!src/cli*"
+                    ],
                 tasks: ["build"]
             },
             html: {

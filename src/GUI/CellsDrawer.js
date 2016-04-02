@@ -30,6 +30,7 @@ class CellsDrawer {
 
     _clearDrawnElements() {
         this._two.remove(this._drawnCells);
+        this._drawnCells = [];
     }
 
     _drawRoundaboutGrid() {
