@@ -61,7 +61,8 @@ let cellularAutomata = new CellularAutomata(
     roundaboutBukoweCellsMap,
     cellsNeighbours,
     drivingRules,
-    roundaboutBukowe.adherentLanesCount() / 2
+    roundaboutBukowe.adherentLanesCount() / 2,
+    0.5
 );
 
 roundaboutDrawer.draw();

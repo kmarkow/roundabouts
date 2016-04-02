@@ -42,7 +42,9 @@ class CellularAutomata {
         vehicles.forEach(vehicle => {
             vehicle.setPath(drivingRules.randomPath());
         });
-
+        vehicles = vehicles.sort(() => {
+           return 0.5 < Math.random();
+        });
 
         this._vehiclesQueues = new Map();
         Direction.allDirections().forEach(entranceRoadDirection => {

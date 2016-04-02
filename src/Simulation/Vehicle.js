@@ -77,6 +77,9 @@ class Vehicle {
             if (this._hasStopped() && nothingInFrontOnRoundabout) {
                 this._accelerate(this.maxSpeedWhenTurning());
             }
+            if (this.currentSpeed() > this.maxSpeedWhenTurning()) {
+                this._break(this.maxSpeedWhenTurning());
+            }
             if(nothingInFrontOnRoundabout) {
                 cellsMap.takeEntrance(this, cellsNeighbours);
             }
