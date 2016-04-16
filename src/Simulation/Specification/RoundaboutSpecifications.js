@@ -124,6 +124,19 @@ class RoundaboutSpecification {
         return null;
     }
 
+    laneIdToTheLeftOf(laneId) {
+        if (this.lanesCount() == 2 && laneId == 1) {
+            return 0;
+        }
+        if (this.lanesCount() == 3 && laneId == 2) {
+            return 1;
+        }
+        if (this.lanesCount() == 3 && laneId == 1) {
+            return 0;
+        }
+        return null;
+    }
+
     entranceLaneIdToTheRightOf(laneId) {
         if (laneId.includes("_ENTRANCE_1")) {
             return laneId.replace("_ENTRANCE_1", "_ENTRANCE_0");

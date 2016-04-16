@@ -359,6 +359,19 @@ describe("Test roundabout cells map", function() {
         expect(cellsMap.vehicleOnTheRight(car2)).toBe(car);
     });
 
+    it('find vehicle on the left on roundabout', () => {
+        var path = new Path(null, null, null, Direction.newNorth(), 1);
+        var car = VehicleFactory.newCar(drivingRules);
+        car.setPath(path);
+        cellsMap.addVehicle(car, 1, 16);
+
+        var car2 = VehicleFactory.newCar(drivingRules);
+        car2.setPath(path);
+        cellsMap.addVehicle(car2, 0, 14);
+
+        expect(cellsMap.vehicleOnTheLeftOnRoundabout(car)).toBe(car2);
+    });
+
     it('find vehicle on the right on entrance', () => {
         var carOnRightLane = VehicleFactory.newCar(drivingRules);
         carOnRightLane.setPath(new Path(

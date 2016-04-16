@@ -130,6 +130,29 @@ class CellsMap extends Observable {
         return null;
     }
 
+    vehicleOnTheLeftOnRoundabout(vehicle) {
+        var cellsDiff = 3;
+        var laneIdOnTheLeft = this._roundaboutSpecification.laneIdToTheLeftOf(vehicle.currentLaneId());
+        if (laneIdOnTheLeft == null) {
+            return null;
+        }
+        var laneOnTheLeft = this._lanes.get(laneIdOnTheLeft);
+        var cellOnTheLeftId = vehicle.frontCell().number() - cellsDiff;
+        var cellOnTheLeft = laneOnTheLeft.allCells()[cellOnTheLeftId];
+        var cellsOnTheLeft = laneOnTheLeft.cellsPreviousToInclusive(cellOnTheLeft, 4);
+        var cellWithAVehicle = cellsOnTheLeft.find(cell => {
+            if (cell.vehicle()) {
+                return true;
+            }
+            return false;
+        });
+        if (cellWithAVehicle) {
+            return cellWithAVehicle.vehicle();
+        }
+
+        return null;
+    }
+
     vehiclesOnTheLeft(vehicle, cellsNeighbours) {
         var roundaboutLanes = this._roundaboutSpecification.lanesNumbers(); // [0,1]
         var vehiclesOnTheLeft = new Map();
