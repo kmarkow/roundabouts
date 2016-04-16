@@ -25,26 +25,15 @@ var cellsNeighbours = new CellsNeighbours(
     unitConverter.metersAsCells(roundaboutBukowe.adherentRoadLength())
 );
 
+var drivingRule = DrivingRules.newRules4(
+    roundaboutBukowe.lanesCount(),
+    roundaboutBukowe.adherentLanesCount()
+);
 
-let drivingRules = [
-    DrivingRules.newRules1(
-        roundaboutBukowe.lanesCount(),
-        roundaboutBukowe.adherentLanesCount()
-    ),
-    DrivingRules.newRules2(
-        roundaboutBukowe.lanesCount(),
-        roundaboutBukowe.adherentLanesCount()
-    ),
-    DrivingRules.newRules3(
-        roundaboutBukowe.lanesCount(),
-        roundaboutBukowe.adherentLanesCount()
-    ),
-    DrivingRules.newRules4(
-        roundaboutBukowe.lanesCount(),
-        roundaboutBukowe.adherentLanesCount()
-    )
-];
-drivingRules.forEach(drivingRule => {
+
+var vehiclesCount = range(0, 100);
+
+vehiclesCount.forEach(vehicleCount => {
 
     var results = [];
     range(0, 20).forEach(() => {
@@ -53,7 +42,8 @@ drivingRules.forEach(drivingRule => {
             cellsNeighbours,
             drivingRule,
             roundaboutBukowe.adherentLanesCount() / 2,
-            0.1
+            0,
+            vehicleCount
         );
 
         while (!cellularAutomata.hasFinished()) {
@@ -62,5 +52,5 @@ drivingRules.forEach(drivingRule => {
         results.push(cellularAutomata.iterations());
     });
 
-    console.log("Finished simulation: ",  results.join(","));
+    console.log("Finished simulation with vehicles count ", vehicleCount, ": ",  results.join(","));
 });

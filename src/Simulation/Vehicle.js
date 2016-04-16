@@ -51,56 +51,13 @@ class Vehicle {
     moveToNextIteration(cellsMap, cellsNeighbours) {
         //Entering roundabout
         if(cellsNeighbours.approachedEntrance(this)) {
-            var vehiclesOnTheLeft = cellsMap.vehiclesOnTheLeft(this, cellsNeighbours);
-            for (let vehicle of vehiclesOnTheLeft.values()) {
-                if (this._drivingRules.entranceRules.shouldYieldTo(this, vehicle)) {
-                    this._stop()
-                    return;
-                }
-            }
-            var vehicleOnTheRight = cellsMap.vehicleOnTheRight(this);
-            if(vehicleOnTheRight && this._drivingRules.entranceRules.shouldYieldTo(this, vehicleOnTheRight)) {
-                this._stop()
-                return;
-            }
-
-            var firstCellOnRoundabout = cellsNeighbours.firstCellNumberOnEntrance(
-                this.entranceRoadId(),
-                this.entranceLaneId(),
-                this.roundaboutLaneId()
-            );
-            var nothingInFrontOnRoundabout = cellsMap.nothingOnRoundaboutFrom(
-                this.roundaboutLaneId(),
-                firstCellOnRoundabout,
-                this.maxSpeedWhenTurning()
-            );
-            if (this._hasStopped() && nothingInFrontOnRoundabout) {
-                this._accelerate(this.maxSpeedWhenTurning());
-            }
-            if (this.currentSpeed() > this.maxSpeedWhenTurning()) {
-                this._break(this.maxSpeedWhenTurning());
-            }
-            if(nothingInFrontOnRoundabout) {
-                cellsMap.takeEntrance(this, cellsNeighbours);
-            }
+            this._onEntrance(cellsMap, cellsNeighbours);
             return;
         }
 
         //Taking exit
         if(cellsNeighbours.approachedExit(this)) {
-            if (!cellsMap.exitLaneEmpty(this, this.maxSpeedWhenTurning())) {
-                this._stop();
-                return;
-            }
-            var vehicleOnTheRight = cellsMap.vehicleOnTheRight(this);
-            if (vehicleOnTheRight && this._drivingRules.exitRules.shouldYieldTo(this, vehicleOnTheRight)) {
-                this._stop();
-            } else {
-                if (this._hasStopped()) {
-                    this._accelerate(this.maxSpeedWhenTurning());
-                }
-                cellsMap.takeExit(this);
-            }
+            this._onExit(cellsMap);
             return;
         }
 
@@ -111,7 +68,7 @@ class Vehicle {
                 !this._isApproachingExit(cellsNeighbours) &&
                 !this._isApproachingRoundabout(cellsNeighbours)
             ) {
-                    this._accelerate();
+                this._accelerate();
             }
         } else {
             var breakUpTo = this._distanceFromPrecedingVehicle(cellsMap);
@@ -141,7 +98,7 @@ class Vehicle {
             cell.setVehicle(null);
         });
         cells.forEach(cell => {
-           cell.setVehicle(this);
+            cell.setVehicle(this);
         });
         this._currentCells = cells;
     }
@@ -170,8 +127,8 @@ class Vehicle {
 
     isEnteringRoundabout() {
         return this.currentCells().some(cell => {
-                return cell.parentLane().isEntranceLane();
-            });
+            return cell.parentLane().isEntranceLane();
+        });
     }
 
     _isMovingWithMaxSpeed() {
@@ -219,7 +176,59 @@ class Vehicle {
 
     _isApproachingRoundabout(cellsNeighbours) {
         return cellsNeighbours.isApproachingRoundabout(this) &&
-                this.frontCell().parentLane().isEntranceLane();
+            this.frontCell().parentLane().isEntranceLane();
+    }
+
+    _onEntrance(cellsMap, cellsNeighbours) {
+        var vehiclesOnTheLeft = cellsMap.vehiclesOnTheLeft(this, cellsNeighbours);
+        for (let vehicle of vehiclesOnTheLeft.values()) {
+            if (this._drivingRules.entranceRules.shouldYieldTo(this, vehicle)) {
+                this._stop()
+                return;
+            }
+        }
+        var vehicleOnTheRight = cellsMap.vehicleOnTheRight(this);
+        if(vehicleOnTheRight && this._drivingRules.entranceRules.shouldYieldTo(this, vehicleOnTheRight)) {
+            this._stop()
+            return;
+        }
+
+        var firstCellOnRoundabout = cellsNeighbours.firstCellNumberOnEntrance(
+            this.entranceRoadId(),
+            this.entranceLaneId(),
+            this.roundaboutLaneId()
+        );
+        var nothingInFrontOnRoundabout = cellsMap.nothingOnRoundaboutFrom(
+            this.roundaboutLaneId(),
+            firstCellOnRoundabout,
+            this.maxSpeedWhenTurning()
+        );
+        if (this._hasStopped() && nothingInFrontOnRoundabout) {
+            this._accelerate(this.maxSpeedWhenTurning());
+        }
+        if (this.currentSpeed() > this.maxSpeedWhenTurning()) {
+            this._break(this.maxSpeedWhenTurning());
+        }
+        if(nothingInFrontOnRoundabout) {
+            cellsMap.takeEntrance(this, cellsNeighbours);
+        }
+    }
+
+    _onExit(cellsMap) {
+        if (!cellsMap.exitLaneEmpty(this, this.maxSpeedWhenTurning())) {
+            this._stop();
+            return;
+        }
+        var vehicleOnTheRight = cellsMap.vehicleOnTheRight(this);
+        if (vehicleOnTheRight && this._drivingRules.exitRules.shouldYieldTo(this, vehicleOnTheRight)) {
+            this._stop();
+        } else {
+            if (this._hasStopped()) {
+                this._accelerate(this.maxSpeedWhenTurning());
+            }
+            cellsMap.takeExit(this);
+        }
+        return;
     }
 }
 

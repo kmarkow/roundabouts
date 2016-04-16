@@ -25,7 +25,7 @@ class VehicleQueue {
 
 class CellularAutomata {
 
-    constructor(cellsMap, cellsNeighbours, drivingRules, ingoingLanesCount, truckRatio=0) {
+    constructor(cellsMap, cellsNeighbours, drivingRules, ingoingLanesCount, truckRatio=0, vehicleCount=500) {
         this._iterations = 0;
         this._cellsMap = cellsMap;
         this._cellsNeighbours = cellsNeighbours;
@@ -33,10 +33,10 @@ class CellularAutomata {
         this._vehicles = [];
 
         var vehicles = [];
-        range(0, Math.round(500*(1-truckRatio))).forEach(() => {
+        range(0, Math.round(vehicleCount*(1-truckRatio))).forEach(() => {
             vehicles.push(VehicleFactory.newCar(this._drivingRules));
         });
-        range(0, Math.round(500*truckRatio)).forEach(() => {
+        range(0, Math.round(vehicleCount*truckRatio)).forEach(() => {
             vehicles.push(VehicleFactory.newTruck(this._drivingRules));
         });
         vehicles.forEach(vehicle => {
