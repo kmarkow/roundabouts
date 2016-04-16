@@ -34,34 +34,27 @@ class CellsNeighbours  {
         });
     }
 
-    isApproachingExit(vehicle) {
+    isApproachingDestinationExit(vehicle) {
         var closestDestinationExitOn = this._destinationExitCellIdFor(vehicle);
         if (closestDestinationExitOn == null) {
             return false;
         }
-        var distanceFromExit = closestDestinationExitOn - vehicle.frontCell().number();
-        var distanceTravelledIfStartsSlowingDown = range(
-            vehicle.maxSpeedWhenTurning(), Math.max(0, vehicle.currentSpeed()-1)
-        ).reduce((previousValue, currentValue) => {
-            return previousValue + currentValue;
-        }, 0);
-        if (distanceTravelledIfStartsSlowingDown >= distanceFromExit && distanceFromExit > 0) {
-            return true;
-        }
-        return false;
+        return this._isApproachingExit(closestDestinationExitOn, vehicle);
+    }
+
+    isApproachingAnyExit(vehicle) {
+        var approaches = Array.from(this._exits[vehicle.currentLaneId()].values(), exitsCells => {
+            var exitApproaches = Array.from(exitsCells, exitCell => {
+                return this._isApproachingExit(exitCell, vehicle);
+            });
+            return exitApproaches.some(approach=> {return approach});
+        });
+        return approaches.some(approach => {return approach});
     }
 
     isApproachingRoundabout(vehicle) {
         var distanceFromEntrance = this._maxCellIdOnEntrance - vehicle.frontCell().number();
-        var distanceTravelledIfStartsSlowingDown = range(
-            vehicle.maxSpeedWhenTurning(), Math.max(0, vehicle.currentSpeed()-1)
-        ).reduce((previousValue, currentValue) => {
-            return previousValue + currentValue;
-        }, 0);
-        if (distanceTravelledIfStartsSlowingDown >= distanceFromEntrance && distanceFromEntrance > 0) {
-            return true;
-        }
-        return false;
+        return this._isApproaching(distanceFromEntrance, vehicle);
     }
 
     approachedExit(vehicle) {
@@ -92,6 +85,23 @@ class CellsNeighbours  {
         }
         var destinationExit = destinationExits.get(vehicle.destinationExit());
         return destinationExit[vehicle.destinationExitLaneId()];
+    }
+
+    _isApproachingExit(exitCell, vehicle) {
+        var distanceFromExit = exitCell - vehicle.frontCell().number();
+        return this._isApproaching(distanceFromExit, vehicle);
+    }
+
+    _isApproaching(distanceFrom, vehicle) {
+        var distanceTravelledIfStartsSlowingDown = range(
+            vehicle.maxSpeedWhenTurning(), Math.max(0, vehicle.currentSpeed()-1)
+        ).reduce((previousValue, currentValue) => {
+            return previousValue + currentValue;
+        }, 0);
+        if (distanceTravelledIfStartsSlowingDown >= distanceFrom && distanceFrom > 0) {
+            return true;
+        }
+        return false;
     }
 }
 

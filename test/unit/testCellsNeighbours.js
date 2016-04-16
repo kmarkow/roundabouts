@@ -49,6 +49,45 @@ describe("Cells Neighbours", function() {
         expect(cellsNeighbours.firstCellNumberOnEntrance('N', 0, 0)).toEqual(18);
     });
 
+
+    it('accurately says when approaching any exit', () => {
+        var carsParameters = [
+            {"destinationRoadId": Direction.newNorth(), "frontCellId": 10},
+            {"destinationRoadId": Direction.newNorth(), "frontCellId": 30},
+            {"destinationRoadId": Direction.newNorth(), "frontCellId": 50},
+            {"destinationRoadId": Direction.newNorth(), "frontCellId": 70},
+        ];
+        var cellsNeighbours = new CellsNeighbours([70, 80], 2, 14);
+        carsParameters.forEach(carParamerers => {
+            var car = VehicleFactory.newCar(drivingRules);
+            spyOn(car, "currentSpeed").and.returnValue(5);
+            spyOn(car, "frontCell").and.returnValue(new Cell(carParamerers.frontCellId));
+            spyOn(car, "currentLaneId").and.returnValue(1);
+            var path = new Path(null, null, null, carParamerers.destinationRoadId, 0);
+            car.setPath(path);
+            expect(cellsNeighbours.isApproachingAnyExit(car)).toBe(true);
+        });
+    });
+
+    it('accurately says when not approaching any exit', () => {
+        var carsParameters = [
+            {"destinationRoadId": Direction.newNorth(), "frontCellId": 2},
+            {"destinationRoadId": Direction.newNorth(), "frontCellId": 22},
+            {"destinationRoadId": Direction.newNorth(), "frontCellId": 42},
+            {"destinationRoadId": Direction.newNorth(), "frontCellId": 62},
+        ];
+        var cellsNeighbours = new CellsNeighbours([70, 80], 2, 14);
+        carsParameters.forEach(carParamerers => {
+            var car = VehicleFactory.newCar(drivingRules);
+            spyOn(car, "currentSpeed").and.returnValue(5);
+            spyOn(car, "frontCell").and.returnValue(new Cell(carParamerers.frontCellId));
+            spyOn(car, "currentLaneId").and.returnValue(1);
+            var path = new Path(null, null, null, carParamerers.destinationRoadId, 0);
+            car.setPath(path);
+            expect(cellsNeighbours.isApproachingAnyExit(car)).toBe(false);
+        });
+    });
+
     it('accurately says when approaching exit on 2 lane roundabout', () => {
         var carsParameters = [
             {"destinationRoadId": Direction.newNorth(), "frontCellId": 10},
@@ -64,7 +103,7 @@ describe("Cells Neighbours", function() {
             spyOn(car, "currentLaneId").and.returnValue(1);
             var path = new Path(null, null, null, carParamerers.destinationRoadId, 0);
             car.setPath(path);
-            expect(cellsNeighbours.isApproachingExit(car)).toBe(true);
+            expect(cellsNeighbours.isApproachingDestinationExit(car)).toBe(true);
         });
     });
 
@@ -83,7 +122,7 @@ describe("Cells Neighbours", function() {
             spyOn(car, "currentLaneId").and.returnValue(2);
             var path = new Path(null, null, null, carParamerers.destinationRoadId, 0);
             car.setPath(path);
-            expect(cellsNeighbours.isApproachingExit(car)).toBe(true);
+            expect(cellsNeighbours.isApproachingDestinationExit(car)).toBe(true);
         });
     });
 
@@ -102,7 +141,7 @@ describe("Cells Neighbours", function() {
             spyOn(car, "currentLaneId").and.returnValue(2);
             var path = new Path(null, null, null, carParamerers.destinationRoadId, 0);
             car.setPath(path);
-            expect(cellsNeighbours.isApproachingExit(car)).toBe(false);
+            expect(cellsNeighbours.isApproachingDestinationExit(car)).toBe(false);
         });
     });
 

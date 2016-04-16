@@ -170,7 +170,7 @@ class Vehicle {
     }
 
     _isApproachingExit(cellsNeighbours) {
-        return cellsNeighbours.isApproachingExit(this) &&
+        return cellsNeighbours.isApproachingDestinationExit(this) &&
             this.frontCell().parentLane().isRoundaboutLane();
     }
 
