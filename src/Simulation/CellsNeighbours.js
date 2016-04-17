@@ -51,6 +51,26 @@ class CellsNeighbours  {
         });
         return approaches.some(approach => {return approach});
     }
+    
+    closestExitId(vehicle) {
+        var exits = Array.from(this._exits[vehicle.currentLaneId()].entries(), exit => {
+            var exitCellId = exit[1][0];
+            var exitName = exit[0];
+            var distanceFromExit = exitCellId - vehicle.frontCell().number();
+            return [exitName, distanceFromExit];
+        });
+        exits = exits.filter(element => {
+           return element[1] >= 0;
+        });
+        exits.sort((a, b) => {
+            if (a[1] > b[1]) {
+                return 1;
+            } else {
+                return -1;
+            }
+        });
+        return exits[0][0];
+    }
 
     isApproachingRoundabout(vehicle) {
         var distanceFromEntrance = this._maxCellIdOnEntrance - vehicle.frontCell().number();

@@ -69,6 +69,25 @@ describe("Cells Neighbours", function() {
         });
     });
 
+    it('accurately says closest exits', () => {
+        var testCases = [
+            {"closestExit": Direction.newNorth(), "frontCellId": 10},
+            {"closestExit": Direction.newWest(), "frontCellId": 30},
+            {"closestExit": Direction.newSouth(), "frontCellId": 50},
+            {"closestExit": Direction.newEast(), "frontCellId": 70},
+        ];
+        var cellsNeighbours = new CellsNeighbours([70, 80], 2, 14);
+        testCases.forEach(testCase => {
+            var car = VehicleFactory.newCar(drivingRules);
+            spyOn(car, "currentSpeed").and.returnValue(5);
+            spyOn(car, "frontCell").and.returnValue(new Cell(testCase.frontCellId));
+            spyOn(car, "currentLaneId").and.returnValue(1);
+            var path = new Path(null, null, null, Direction.newEast(), 0);
+            car.setPath(path);
+            expect(cellsNeighbours.closestExitId(car)).toBe(testCase.closestExit.id());
+        });
+    });
+
     it('accurately says when not approaching any exit', () => {
         var carsParameters = [
             {"destinationRoadId": Direction.newNorth(), "frontCellId": 2},
