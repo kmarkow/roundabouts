@@ -76,4 +76,13 @@ class SuggestedRules extends ExitRules {
     }
 }
 
-export {CurrentRules, SuggestedRules};
+class SuggestedRulesWithChangedRightOfWay extends SuggestedRules {
+    shouldYieldTo(vehicle, another_vehicle) {
+        if(this._vehiclesLeaveAtTheSameExit(vehicle, another_vehicle)) {
+            return false;
+        }
+        return !this._isOnMiddleLane(vehicle);
+    }
+}
+
+export {CurrentRules, SuggestedRules, SuggestedRulesWithChangedRightOfWay};

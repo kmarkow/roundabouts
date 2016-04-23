@@ -42,6 +42,10 @@ let drivingRules = [
     DrivingRules.newRules4(
         roundaboutBukowe.lanesCount(),
         roundaboutBukowe.adherentLanesCount()
+    ),
+    DrivingRules.newRules5(
+        roundaboutBukowe.lanesCount(),
+        roundaboutBukowe.adherentLanesCount()
     )
 ];
 drivingRules.forEach(drivingRule => {

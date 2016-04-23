@@ -5,6 +5,7 @@ import {CurrentRules as CurrentEntranceRules} from './EntranceRules.js';
 import {SuggestedRules as SuggestedEntranceRules} from './EntranceRules.js';
 import {CurrentRules as CurrentExitRules} from './ExitRules.js';
 import {SuggestedRules as SuggestedExitRules} from './ExitRules.js';
+import {SuggestedRulesWithChangedRightOfWay as SuggestedExitRulesWithChangedRightOfWay} from './ExitRules.js';
 
 class CurrentRoundaboutRules {
     isOnRightOfWay() {
@@ -85,6 +86,15 @@ class DrivingRules {
             new SuggestedEntranceRules(roundaboutLanesCount),
             new SuggestedExitRules(roundaboutLanesCount),
             new CurrentRoundaboutRules()
+        );
+    }
+
+    static newRules5(roundaboutLanesCount, adherentRoadLanesCount) {
+        return new DrivingRules(
+            adherentRoadLanesCount,
+            new SuggestedEntranceRules(roundaboutLanesCount),
+            new SuggestedExitRulesWithChangedRightOfWay(roundaboutLanesCount),
+            new SuggestedRoundaboutRules()
         );
     }
 }

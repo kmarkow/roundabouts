@@ -69,6 +69,9 @@ class CellsNeighbours  {
                 return -1;
             }
         });
+        if (exits.length == 0) {
+            return Direction.newNorth().id();
+        }
         return exits[0][0];
     }
 
@@ -87,6 +90,19 @@ class CellsNeighbours  {
         return vehicle.currentCells().some(cell => {
            return cell.equals(destinationExitCell);
         });
+    }
+
+    approachedAnyExit(vehicle) {
+        var approaches = Array.from(this._exits[vehicle.currentLaneId()].values(), exitsCells => {
+            var exitApproaches = Array.from(exitsCells, exitCell => {
+                if (Math.abs(exitCell - vehicle.frontCell().number()) <= 1) {
+                    return true;
+                }
+                return false;
+            });
+            return exitApproaches.some(approach=> {return approach});
+        });
+        return approaches.some(approach => {return approach});
     }
 
     approachedEntrance(vehicle) {

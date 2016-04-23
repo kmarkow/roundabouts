@@ -59,6 +59,31 @@ class Vehicle {
             return;
         }
 
+        if (!this._drivingRules.roundaboutRules.isOnRightOfWay()) {
+            if (
+                this._shouldYieldToVehicleOnTheLeft(cellsMap, cellsNeighbours) &&
+                cellsNeighbours.isApproachingAnyExit(this)
+            ) {
+                if(!cellsMap.nothingInFrontOf(this, this._currentSpeed+1)) {
+                    var breakUpTo = this._distanceFromPrecedingVehicle(cellsMap);
+                    this._break(breakUpTo);
+                } else {
+                    this._breakBy(1);
+                }
+
+                cellsMap.moveVehicleBy(this, this._currentSpeed);
+                return;
+            }
+
+            if (
+                this._shouldYieldToVehicleOnTheLeft(cellsMap, cellsNeighbours) &&
+                cellsNeighbours.approachedAnyExit(this)
+            ) {
+                this._stop();
+                return;
+            }
+        }
+
         this._accelrateIfPossible(cellsMap, cellsNeighbours);
         this._keepSafeDistanceFromPrecedeeingVehicle(cellsMap);
 
@@ -130,6 +155,17 @@ class Vehicle {
         return this.currentCells().some(cell => {
             return cell.parentLane().isEntranceLane();
         });
+    }
+
+    _shouldYieldToVehicleOnTheLeft(cellsMap, cellsNeighbours) {
+        var vehicleOnTheLeft = cellsMap.vehicleOnTheLeftOnRoundabout(this);
+        if (!vehicleOnTheLeft) {
+            return false;
+        }
+        if (vehicleOnTheLeft.destinationExit() == cellsNeighbours.closestExitId(this)) {
+            return true;
+        }
+        return false;
     }
 
     _accelerate(by=1) {

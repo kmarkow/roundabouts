@@ -4,6 +4,7 @@ import {CurrentRules as CurrentEntranceRules} from '../../src/Simulation/Entranc
 import {SuggestedRules as SuggestedEntranceRules} from '../../src/Simulation/EntranceRules.js';
 import {CurrentRules as CurrentExitRules} from '../../src/Simulation/ExitRules.js';
 import {SuggestedRules as SuggestedExitRules} from '../../src/Simulation/ExitRules.js';
+import {SuggestedRulesWithChangedRightOfWay as SuggestedExitRulesWithChangedRightOfWay} from '../../src/Simulation/ExitRules.js';
 import VehicleFactory from '../../src/Simulation/VehicleFactory.js'
 import CellsLane from '../../src/Simulation/CellsLane.js';
 import Path from '../../src/Simulation/Path.js';
@@ -87,6 +88,15 @@ describe("Rule", function() {
 
         expect(exitRules.shouldYieldTo(car_middle_lane, car_outer_lane)).toBe(false);
         expect(exitRules.shouldYieldTo(car_outer_lane, car_middle_lane)).toBe(false);
+    });
+
+    it('exit rule #3 middle-left does not yield to right', () => {
+        var exitRules = new SuggestedExitRulesWithChangedRightOfWay(TWO_LANE_ROUNDABOUT);
+        var car_outer_lane = givenCarOnOuterLane(Direction.newEast(), 1);
+        var car_middle_lane = givenCarOnMiddleLane(Direction.newNorth(), 0);
+
+        expect(exitRules.shouldYieldTo(car_middle_lane, car_outer_lane)).toBe(false);
+        expect(exitRules.shouldYieldTo(car_outer_lane, car_middle_lane)).toBe(true);
     });
 
     it('entrance rule #1 right-outer yields to outer-outer and does not yield to middle-middle', () => {

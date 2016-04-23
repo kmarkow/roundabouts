@@ -69,12 +69,32 @@ describe("Cells Neighbours", function() {
         });
     });
 
+    it('accurately says when approached exit', () => {
+        var carsParameters = [
+            {"destinationRoadId": Direction.newNorth(), "frontCellId": 16},
+            {"destinationRoadId": Direction.newNorth(), "frontCellId": 37},
+            {"destinationRoadId": Direction.newNorth(), "frontCellId": 57},
+            {"destinationRoadId": Direction.newNorth(), "frontCellId": 77},
+        ];
+        var cellsNeighbours = new CellsNeighbours([70, 81], 2, 14);
+        carsParameters.forEach(carParamerers => {
+            var car = VehicleFactory.newCar(drivingRules);
+            spyOn(car, "currentSpeed").and.returnValue(5);
+            spyOn(car, "frontCell").and.returnValue(new Cell(carParamerers.frontCellId));
+            spyOn(car, "currentLaneId").and.returnValue(1);
+            var path = new Path(null, null, null, carParamerers.destinationRoadId, 0);
+            car.setPath(path);
+            expect(cellsNeighbours.approachedAnyExit(car)).toBe(true);
+        });
+    });
+
     it('accurately says closest exits', () => {
         var testCases = [
             {"closestExit": Direction.newNorth(), "frontCellId": 10},
             {"closestExit": Direction.newWest(), "frontCellId": 30},
             {"closestExit": Direction.newSouth(), "frontCellId": 50},
             {"closestExit": Direction.newEast(), "frontCellId": 70},
+            {"closestExit": Direction.newNorth(), "frontCellId": 79},
         ];
         var cellsNeighbours = new CellsNeighbours([70, 80], 2, 14);
         testCases.forEach(testCase => {
