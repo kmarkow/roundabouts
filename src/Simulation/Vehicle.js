@@ -1,5 +1,3 @@
-import RandomNumberGenerator from './RandomNumberGenerator.js';
-
 class Vehicle {
 
     constructor(lengthCells, maxSpeed, maxSpeedWhenTurning, drivingRules) {
@@ -56,24 +54,13 @@ class Vehicle {
         }
 
         //Taking exit
-        if(cellsNeighbours.approachedExit(this)) {
+        if(cellsNeighbours.approachedDestinationExit(this)) {
             this._onExit(cellsMap);
             return;
         }
 
-        //Going straight on entrance lane, exit lane and roundabout
-        if (cellsMap.nothingInFrontOf(this, this._currentSpeed+1)) {
-            if (
-                !this._isMovingWithMaxSpeed() &&
-                !this._isApproachingExit(cellsNeighbours) &&
-                !this._isApproachingRoundabout(cellsNeighbours)
-            ) {
-                this._accelerate();
-            }
-        } else {
-            var breakUpTo = this._distanceFromPrecedingVehicle(cellsMap);
-            this._break(breakUpTo);
-        }
+        this._accelrateIfPossible(cellsMap, cellsNeighbours);
+        this._keepSafeDistanceFromPrecedeeingVehicle(cellsMap);
 
         if (this._isApproachingExit(cellsNeighbours) || this._isApproachingRoundabout(cellsNeighbours)) {
             if (this.currentSpeed() > this.maxSpeedWhenTurning()) {
@@ -81,6 +68,20 @@ class Vehicle {
             }
         }
         cellsMap.moveVehicleBy(this, this._currentSpeed);
+    }
+
+    _accelrateIfPossible(cellsMap, cellsNeighbours) {
+        if (cellsMap.nothingInFrontOf(this, this._currentSpeed+1)) {
+            if (!this._isApproachingExit(cellsNeighbours) && !this._isApproachingRoundabout(cellsNeighbours)) {
+                this._accelerate();
+            }
+        }
+    }
+    _keepSafeDistanceFromPrecedeeingVehicle(cellsMap) {
+        if (!cellsMap.nothingInFrontOf(this, this._currentSpeed+1)) {
+            var breakUpTo = this._distanceFromPrecedingVehicle(cellsMap);
+            this._break(breakUpTo);
+        }
     }
 
     remove() {
@@ -131,10 +132,6 @@ class Vehicle {
         });
     }
 
-    _isMovingWithMaxSpeed() {
-        return this._currentSpeed == this._maxSpeed;
-    }
-
     _accelerate(by=1) {
         if (this._currentSpeed+by < this._maxSpeed) {
             this._currentSpeed+=by;
@@ -148,7 +145,7 @@ class Vehicle {
     }
 
     _breakBy(by) {
-        if (this._currentSpeed - by > 0) {
+        if (this._currentSpeed - by >= 0) {
             this._currentSpeed -= by;
         }
     }

@@ -7,13 +7,13 @@ class CellsNeighbours  {
     constructor(roundaboutLaneCellsCount, entranceLanesCount, entranceLaneCellsCount) {
         this._maxCellIdOnEntrance = entranceLaneCellsCount - 1;
         this._exits = Array.from(roundaboutLaneCellsCount, laneCellsCount => {
-            var roadEvery = Math.floor(laneCellsCount / 4);
+            var roadEvery = laneCellsCount / 4;
             var firstRoadAt = roadEvery - 3;
             var exits = new Map();
-            exits.set('N', [firstRoadAt + roadEvery * 0, firstRoadAt + 1 + roadEvery * 0]);
-            exits.set('W', [firstRoadAt + roadEvery * 1, firstRoadAt + 1 + roadEvery * 1]);
-            exits.set('S', [firstRoadAt + roadEvery * 2, firstRoadAt + 1 + roadEvery * 2]);
-            exits.set('E', [firstRoadAt + roadEvery * 3, firstRoadAt + 1 + roadEvery * 3]);
+            exits.set('N', [Math.round(firstRoadAt + roadEvery * 0), Math.round(firstRoadAt + 1 + roadEvery * 0)]);
+            exits.set('W', [Math.round(firstRoadAt + roadEvery * 1), Math.round(firstRoadAt + 1 + roadEvery * 1)]);
+            exits.set('S', [Math.round(firstRoadAt + roadEvery * 2), Math.round(firstRoadAt + 1 + roadEvery * 2)]);
+            exits.set('E', [Math.round(firstRoadAt + roadEvery * 3), Math.round(firstRoadAt + 1 + roadEvery * 3)]);
             return exits;
         });
         this._entrances = new Map();
@@ -77,7 +77,7 @@ class CellsNeighbours  {
         return this._isApproaching(distanceFromEntrance, vehicle);
     }
 
-    approachedExit(vehicle) {
+    approachedDestinationExit(vehicle) {
         var destinationExitCellId = this._destinationExitCellIdFor(vehicle);
         if (destinationExitCellId == null) {
             return false;

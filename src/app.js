@@ -72,6 +72,6 @@ function nextIteration() {
         console.log("Finished simulation, ", cellularAutomata.iterations());
         return;
     }
-    setTimeout(()=> {nextIteration();}, 100);
+    setTimeout(()=> {nextIteration();}, 700);
 };
 nextIteration();

@@ -6,11 +6,25 @@ import {SuggestedRules as SuggestedEntranceRules} from './EntranceRules.js';
 import {CurrentRules as CurrentExitRules} from './ExitRules.js';
 import {SuggestedRules as SuggestedExitRules} from './ExitRules.js';
 
+class CurrentRoundaboutRules {
+    isOnRightOfWay() {
+        return true;
+    }
+}
+
+class SuggestedRoundaboutRules {
+    isOnRightOfWay(vehicle, cellsMap) {
+        return false;
+    }
+}
+
+
 class DrivingRules {
-    constructor(adherentRoadLanesCount, entranceRules, exitRules) {
+    constructor(adherentRoadLanesCount, entranceRules, exitRules, roundaboutRules) {
         this._entrancesExitsLanesCount = adherentRoadLanesCount/2;
         this.entranceRules = entranceRules;
         this.exitRules = exitRules;
+        this.roundaboutRules = roundaboutRules;
     }
 
     randomPath() {
@@ -42,7 +56,8 @@ class DrivingRules {
         return new DrivingRules(
             adherentRoadLanesCount,
             new CurrentEntranceRules(roundaboutLanesCount),
-            new CurrentExitRules(roundaboutLanesCount)
+            new CurrentExitRules(roundaboutLanesCount),
+            new CurrentRoundaboutRules()
         );
     }
 
@@ -50,7 +65,8 @@ class DrivingRules {
         return new DrivingRules(
             adherentRoadLanesCount,
             new SuggestedEntranceRules(roundaboutLanesCount),
-            new CurrentExitRules(roundaboutLanesCount)
+            new CurrentExitRules(roundaboutLanesCount),
+            new CurrentRoundaboutRules()
         );
     }
 
@@ -58,7 +74,8 @@ class DrivingRules {
         return new DrivingRules(
             adherentRoadLanesCount,
             new CurrentEntranceRules(roundaboutLanesCount),
-            new SuggestedExitRules(roundaboutLanesCount)
+            new SuggestedExitRules(roundaboutLanesCount),
+            new CurrentRoundaboutRules()
         );
     }
 
@@ -66,7 +83,8 @@ class DrivingRules {
         return new DrivingRules(
             adherentRoadLanesCount,
             new SuggestedEntranceRules(roundaboutLanesCount),
-            new SuggestedExitRules(roundaboutLanesCount)
+            new SuggestedExitRules(roundaboutLanesCount),
+            new CurrentRoundaboutRules()
         );
     }
 }

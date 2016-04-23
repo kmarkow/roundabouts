@@ -50,6 +50,10 @@ class CellsLane {
         return this._allCells;
     }
 
+    cellsCount() {
+        return this._allCells.length;
+    }
+
     firstCells(numberOfCells) {
         return this._allCells.slice(0, numberOfCells);
     }
