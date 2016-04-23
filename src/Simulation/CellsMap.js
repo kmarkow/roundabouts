@@ -106,7 +106,7 @@ class CellsMap extends Observable {
         var cellOnTheRightId = null;
         if (vehicle.frontCell().parentLane().isRoundaboutLane()) {
             laneIdOnTheRight = this._roundaboutSpecification.laneIdToTheRightOf(vehicle.currentLaneId());
-            cellOnTheRightId = this.cellOnTheRightOf(vehicle.frontCell().number());
+            cellOnTheRightId = this.cellOnRoundaboutOnTheRightOf(vehicle.frontCell().number());
         } else if (vehicle.frontCell().parentLane().isEntranceLane()) {
             laneIdOnTheRight = this._roundaboutSpecification.entranceLaneIdToTheRightOf(vehicle.currentLaneId());
             cellOnTheRightId = vehicle.frontCell().number();
@@ -118,6 +118,29 @@ class CellsMap extends Observable {
         var cellOnTheRight = laneOnTheRight.allCells()[cellOnTheRightId];
         var cellsOnTheRight = laneOnTheRight.cellsPreviousToInclusive(cellOnTheRight, 4);
         var cellWithAVehicle = cellsOnTheRight.find(cell => {
+            if (cell.vehicle()) {
+                return true;
+            }
+            return false;
+        });
+        if (cellWithAVehicle) {
+            return cellWithAVehicle.vehicle();
+        }
+
+        return null;
+    }
+
+    vehicleOnTheLeftOnRoundabout(vehicle) {
+        var laneIdOnTheLeft = this._roundaboutSpecification.laneIdToTheLeftOf(vehicle.currentLaneId());
+        if (laneIdOnTheLeft == null) {
+            return null;
+        }
+        var laneOnTheLeft = this._lanes.get(laneIdOnTheLeft);
+        var cellOnTheLeftId = this.cellOnRoundaboutOnTheLeftOf(vehicle.frontCell().number());
+        var cellOnTheLeft = laneOnTheLeft.allCells()[cellOnTheLeftId];
+        var cellsOnTheLeft = laneOnTheLeft.cellsPreviousToInclusive(cellOnTheLeft, 6);
+        // cellsOnTheLeft = cellsOnTheLeft.concat(laneOnTheLeft.cellsNextTo(cellOnTheLeft, 4)); //TODO: Sprawdzic takze w przód :/
+        var cellWithAVehicle = cellsOnTheLeft.find(cell => {
             if (cell.vehicle()) {
                 return true;
             }
@@ -182,9 +205,14 @@ class CellsMap extends Observable {
         vehicle.moveToCells(newVehicleCells);
     }
 
-    cellOnTheRightOf(leftCellId) {
+    cellOnRoundaboutOnTheRightOf(leftCellId) {
         var multiplier = this._lanes.get(1).cellsCount() / this._lanes.get(0).cellsCount();
         return Math.round(leftCellId * multiplier);
+    }
+
+    cellOnRoundaboutOnTheLeftOf(rightCellId) {
+        var multiplier = this._lanes.get(0).cellsCount() / this._lanes.get(1).cellsCount();
+        return Math.round(rightCellId * multiplier);
     }
 }
 

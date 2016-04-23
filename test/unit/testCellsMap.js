@@ -369,7 +369,7 @@ describe("Test roundabout cells map", function() {
         car2.setPath(path);
         cellsMap.addVehicle(car2, 0, 14);
 
-        // expect(cellsMap.vehicleOnTheLeftOnRoundabout(car)).toBe(car2);
+        expect(cellsMap.vehicleOnTheLeftOnRoundabout(car)).toBe(car2);
     });
 
     it('find vehicle on the right on entrance', () => {
@@ -438,12 +438,21 @@ describe("Test roundabout cells map", function() {
     });
 
     it('counts cell neighbour on the right of', () => {
-        expect(cellsMap.cellOnTheRightOf(0)).toBe(0);
-        expect(cellsMap.cellOnTheRightOf(1)).toBe(1);
-        expect(cellsMap.cellOnTheRightOf(2)).toBe(2);
-        expect(cellsMap.cellOnTheRightOf(3)).toBe(3);
-        expect(cellsMap.cellOnTheRightOf(4)).toBe(5);
-        expect(cellsMap.cellOnTheRightOf(69)).toBe(80);
+        expect(cellsMap.cellOnRoundaboutOnTheRightOf(0)).toBe(0);
+        expect(cellsMap.cellOnRoundaboutOnTheRightOf(1)).toBe(1);
+        expect(cellsMap.cellOnRoundaboutOnTheRightOf(2)).toBe(2);
+        expect(cellsMap.cellOnRoundaboutOnTheRightOf(3)).toBe(3);
+        expect(cellsMap.cellOnRoundaboutOnTheRightOf(4)).toBe(5);
+        expect(cellsMap.cellOnRoundaboutOnTheRightOf(69)).toBe(80);
+    });
+
+    it('counts cell neighbour on the left of', () => {
+        expect(cellsMap.cellOnRoundaboutOnTheLeftOf(0)).toBe(0);
+        expect(cellsMap.cellOnRoundaboutOnTheLeftOf(1)).toBe(1);
+        expect(cellsMap.cellOnRoundaboutOnTheLeftOf(2)).toBe(2);
+        expect(cellsMap.cellOnRoundaboutOnTheLeftOf(3)).toBe(3);
+        expect(cellsMap.cellOnRoundaboutOnTheLeftOf(5)).toBe(4);
+        expect(cellsMap.cellOnRoundaboutOnTheLeftOf(80)).toBe(69);
     });
     
     function expectCellsToEqual(firstCells, secondCells) {
