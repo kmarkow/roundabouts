@@ -8,20 +8,20 @@ class CellsNeighbours  {
         this._maxCellIdOnEntrance = entranceLaneCellsCount - 1;
         this._exits = Array.from(roundaboutLaneCellsCount, laneCellsCount => {
             var roadEvery = laneCellsCount / 4;
-            var firstRoadAt = roadEvery - 3;
+            var firstRoadAt = roadEvery;
             var exits = new Map();
-            exits.set('N', [Math.round(firstRoadAt + roadEvery * 0), Math.round(firstRoadAt + 1 + roadEvery * 0)]);
-            exits.set('W', [Math.round(firstRoadAt + roadEvery * 1), Math.round(firstRoadAt + 1 + roadEvery * 1)]);
-            exits.set('S', [Math.round(firstRoadAt + roadEvery * 2), Math.round(firstRoadAt + 1 + roadEvery * 2)]);
-            exits.set('E', [Math.round(firstRoadAt + roadEvery * 3), Math.round(firstRoadAt + 1 + roadEvery * 3)]);
+            exits.set('N', [Math.round(firstRoadAt + roadEvery * 0) - 3, Math.round(firstRoadAt + roadEvery * 0) - 2]);
+            exits.set('W', [Math.round(firstRoadAt + roadEvery * 1) - 3, Math.round(firstRoadAt + roadEvery * 1) - 2]);
+            exits.set('S', [Math.round(firstRoadAt + roadEvery * 2) - 3, Math.round(firstRoadAt + roadEvery * 2) - 2]);
+            exits.set('E', [Math.round(firstRoadAt + roadEvery * 3) - 3, Math.round(firstRoadAt + roadEvery * 3) - 2]);
             return exits;
         });
         this._entrances = new Map();
         ["N", "W", "S", "E"].forEach((direction, multiplier) => {
             roundaboutLaneCellsCount.forEach((laneCellsCount, roundaboutLaneId) => {
-                var roadEvery = Math.round(laneCellsCount / 4);
+                var roadEvery = laneCellsCount / 4;
                 range(0, entranceLanesCount).forEach(entranceLaneId => {
-                    var value = roadEvery * (multiplier + 1) -entranceLaneId + 2*roundaboutLaneId;
+                    var value = Math.round(roadEvery * (multiplier + 1) + 2 - entranceLaneId);
                     if (value >= laneCellsCount) {
                         value = value - laneCellsCount;
                     }

@@ -78,25 +78,18 @@ describe("Test roundabout cells map", function() {
                 {laneId: 'N_ENTRANCE_1', cellNumber: 9},
             ],
             [
-                {laneId: 0, cellNumber: 18},
+                {laneId: 0, cellNumber: 20},
                 {laneId: 'N_ENTRANCE_1', cellNumber: 13},
                 {laneId: 'N_ENTRANCE_1', cellNumber: 12},
                 {laneId: 'N_ENTRANCE_1', cellNumber: 11},
                 {laneId: 'N_ENTRANCE_1', cellNumber: 10},
             ],
             [
-                {laneId: 0, cellNumber: 20},
-                {laneId: 0, cellNumber: 19},
-                {laneId: 0, cellNumber: 18},
-                {laneId: 'N_ENTRANCE_1', cellNumber: 13},
-                {laneId: 'N_ENTRANCE_1', cellNumber: 12},
-            ],
-            [
                 {laneId: 0, cellNumber: 22},
                 {laneId: 0, cellNumber: 21},
                 {laneId: 0, cellNumber: 20},
-                {laneId: 0, cellNumber: 19},
-                {laneId: 0, cellNumber: 18},
+                {laneId: 'N_ENTRANCE_1', cellNumber: 13},
+                {laneId: 'N_ENTRANCE_1', cellNumber: 12},
             ],
             [
                 {laneId: 0, cellNumber: 24},
@@ -220,18 +213,17 @@ describe("Test roundabout cells map", function() {
                 {laneId: 'N_ENTRANCE_1', cellNumber: 13},
                 {laneId: 'N_ENTRANCE_1', cellNumber: 12},
             ],
-
             [
-                {laneId: 0, cellNumber: 19},
-                {laneId: 0, cellNumber: 18},
-            ],
-            [
-                {laneId: 0, cellNumber: 22},
                 {laneId: 0, cellNumber: 21},
+                {laneId: 0, cellNumber: 20},
             ],
             [
+                {laneId: 0, cellNumber: 24},
+                {laneId: 0, cellNumber: 23},
+            ],
+            [
+                {laneId: 0, cellNumber: 27},
                 {laneId: 0, cellNumber: 26},
-                {laneId: 0, cellNumber: 25},
             ],
             [
                 {laneId: 0, cellNumber: 29},
@@ -457,6 +449,7 @@ describe("Test roundabout cells map", function() {
     
     function expectCellsToEqual(firstCells, secondCells) {
         firstCells.forEach((firstCell, index) => {
+            // console.log("Expect", firstCell.id(), secondCells[index].id(), firstCell.equals(secondCells[index]));
             expect(firstCell.equals(secondCells[index])).toBe(true);
         });
         expect(firstCells.length).toEqual(secondCells.length);
