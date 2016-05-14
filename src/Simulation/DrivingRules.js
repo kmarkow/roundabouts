@@ -11,10 +11,28 @@ class CurrentRoundaboutRules {
     isOnRightOfWay() {
         return true;
     }
+
+    shouldYieldToVehicleOnTheLeft() {
+        return false;
+    }
 }
 
 class SuggestedRoundaboutRules {
     isOnRightOfWay(vehicle, cellsMap) {
+        return false;
+    }
+
+    shouldYieldToVehicleOnTheLeft(cellsMap, cellsNeighbours, vehicle) {
+        var vehicleOnTheLeft = cellsMap.vehicleOnTheLeftOnRoundabout(vehicle);
+        if (!vehicleOnTheLeft) {
+            return false;
+        }
+        if (
+            vehicleOnTheLeft.destinationExit() == cellsNeighbours.closestExitId(vehicle) &&
+            vehicle.destinationExit() != cellsNeighbours.closestExitId(vehicle)
+        ) {
+            return true;
+        }
         return false;
     }
 }

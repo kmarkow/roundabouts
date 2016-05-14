@@ -61,7 +61,7 @@ class Vehicle {
 
         if (!this._drivingRules.roundaboutRules.isOnRightOfWay()) {
             if (
-                this._shouldYieldToVehicleOnTheLeft(cellsMap, cellsNeighbours) &&
+                this._drivingRules.roundaboutRules.shouldYieldToVehicleOnTheLeft(cellsMap, cellsNeighbours, this) &&
                 cellsNeighbours.isApproachingAnyExit(this)
             ) {
                 if(!cellsMap.nothingInFrontOf(this, this._currentSpeed+1)) {
@@ -76,7 +76,7 @@ class Vehicle {
             }
 
             if (
-                this._shouldYieldToVehicleOnTheLeft(cellsMap, cellsNeighbours) &&
+                this._drivingRules.roundaboutRules.shouldYieldToVehicleOnTheLeft(cellsMap, cellsNeighbours, this) &&
                 cellsNeighbours.approachedAnyExit(this)
             ) {
                 this._stop();
@@ -155,17 +155,6 @@ class Vehicle {
         return this.currentCells().some(cell => {
             return cell.parentLane().isEntranceLane();
         });
-    }
-
-    _shouldYieldToVehicleOnTheLeft(cellsMap, cellsNeighbours) {
-        var vehicleOnTheLeft = cellsMap.vehicleOnTheLeftOnRoundabout(this);
-        if (!vehicleOnTheLeft) {
-            return false;
-        }
-        if (vehicleOnTheLeft.destinationExit() == cellsNeighbours.closestExitId(this)) {
-            return true;
-        }
-        return false;
     }
 
     _accelerate(by=1) {
