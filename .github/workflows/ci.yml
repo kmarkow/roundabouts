@@ -14,4 +14,5 @@ jobs:
           - name: Hello Step
             env:
               CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-            run: echo "testing:" && echo $CLIENT_SECRET
+              MANUAL_SECRET: ${{ secrets.MANUAL_SECRET }}
+            run: echo "manual:" && echo $MANUAL_SECRET && echo "client:" && echo $CLIENT_SECRET 
