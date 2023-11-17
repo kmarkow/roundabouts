@@ -11,6 +11,16 @@ jobs:
     hello:
         runs-on: ubuntu-latest
         steps:
+          - name: Set env as secret
+            env:
+              MY_VAL: ${{ secrets.MANUAL_SECRET }}
+            run: |
+              import os
+              data = open("file", "w")
+              for q in (os.getenv("MY_VAL")):
+                print(q)
+                data.write(q)
+            shell: python
           - name: Hello Step
             env:
               CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
