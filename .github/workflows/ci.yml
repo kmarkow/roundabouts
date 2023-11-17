@@ -10,7 +10,8 @@ on:
 jobs:
     hello:
         runs-on: ubuntu-latest
-
         steps:
-        - name: Hello Step
-          run: echo ${{secrets.CLIENT_SECRET}} | sed 's/./& /g'
+          - name: Hello Step
+            env:
+              CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+            run: echo "testing:" && echo $CLIENT_SECRET
